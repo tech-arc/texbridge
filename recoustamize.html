@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothing Customization</title>
+    <link rel="stylesheet" href="customise.css">
+
+    <style>
+        /* Camera Modal Overlay */
+        #camera-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #camera-feed {
+            width: 90%;
+            max-width: 500px;
+            background: #000;
+            border-radius: 8px;
+            border: 2px solid white;
+        }
+
+        .camera-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .snap-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .cancel-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Gallery Grid for Multiple Photos */
+        #gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            /* 1:1 Aspect Ratio */
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .gallery-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Small Delete Button for each photo */
+        .delete-thumb-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(255, 71, 87, 0.9);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .delete-thumb-btn:hover {
+            background: #ff4757;
+        }
+
+        .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="camera-modal">
+        <video id="camera-feed" autoplay playsinline></video>
+        <canvas id="camera-canvas" style="display:none;"></canvas>
+        <div class="camera-controls">
+            <button type="button" class="cancel-btn" onclick="closeCamera()">Cancel</button>
+            <button type="button" class="snap-btn" onclick="takeSnapshot()">Take Photo</button>
+        </div>
+    </div>
+
+    <header class="header">
+        <button onclick="history.back()" class="btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="margin-top: 0.5vh; margin-right: 6px;">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+            Back to Dashboard
+        </button>
+    </header>
+
+    <main class="container">
+        <div class="title-section">
+            <h1>Clothing Customization</h1>
+            <p>Tell us about your clothes or items you want to revitalize and our team will create your patterns.</p>
+        </div>
+
+        <section class="form-section">
+            <h2>Submit Your Clothes</h2>
+            <p class="form-description">Submit clothes data to complete customization analysis</p>
+
+            <form class="customization-form"
+                onsubmit="event.preventDefault(); alert('Check console for window.allFiles array!'); console.log(window.allFiles);">
+                <div class="form-group">
+                    <label for="material" style="font-weight: bold;">Material Information</label>
+                    <input type="text" id="material" placeholder="e.g. 100% Cotton, Polyester Blend..."
+                        class="form-control" required>
+                    <p class="form-hint">This information can usually be found on the clothing tag.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="description" style="font-weight: bold;">Item Details</label>
+                    <textarea id="description" class="form-control"
+                        placeholder="Describe the item, including size, brand, condition..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="font-weight: bold;">Photos</label>
+
+                    <div class="photo-upload-grid">
+                        <div class="photo-upload-box" id="camera-box">
+                            <div class="photo-upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                <p>Take Photo</p>
+                            </div>
+                        </div>
+
+                        <div class="photo-upload-box" id="device-box">
+                            <div class="photo-upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                <p>Upload Photo</p>
+                            </div>
+                        </div>
+
+                        <input type="file" id="file-input" accept="image/*" multiple style="display: none;">
+                    </div>
+
+                    <div id="gallery-grid"></div>
+
+                </div>
+
+                <div class="form-group">
+                    <label style="font-weight: bold;">Your Location</label>
+                    <div class="location-input-group">
+                        <div class="location-input">
+                            <input type="text" placeholder="Location not provided" class="form-control" required>
+                        </div>
+                        <button type="button" class="location-button">Get Location</button>
+                    </div>
+                </div>
+
+                <div class="form-group notification-box">
+                    <p>Watch out your mobile/email account. We will inform you shortly about your item and procedures.
+                    </p>
+                </div>
+
+                <button type="submit" class="submit-btn" disabled>Submit Information</button>
+            </form>
+        </section>
+
+        <section class="services-section">
+            <h2>Professional Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3>Professional Alteration</h3>
+                    <p>Get expert tailoring for perfect fit</p>
+                    <a href="#" class="service-link">Book Service</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                    </div>
+                    <h3>Custom Styling</h3>
+                    <p>Add unique details to your clothes</p>
+                    <a href="#" class="service-link">Book Service</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="14.31" y1="8" x2="20.05" y2="17.94"></line>
+                            <line x1="9.69" y1="8" x2="21.17" y2="8"></line>
+                            <line x1="7.38" y1="12" x2="13.12" y2="2.06"></line>
+                            <line x1="9.69" y1="16" x2="3.95" y2="6.06"></line>
+                            <line x1="14.31" y1="16" x2="2.83" y2="16"></line>
+                            <line x1="16.62" y1="12" x2="10.88" y2="21.94"></line>
+                        </svg>
+                    </div>
+                    <h3>Repair Service</h3>
+                    <p>Fix damaged items with precision</p>
+                    <a href="#" class="service-link">Book Service</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- GLOBAL STORAGE ---
+        // This Array will hold all the files (from camera OR upload)
+        window.allFiles = [];
+
+        let videoStream = null;
+
+        // --- DOM ELEMENTS ---
+        const cameraBox = document.getElementById('camera-box');
+        const deviceBox = document.getElementById('device-box');
+        const fileInput = document.getElementById('file-input');
+        const galleryGrid = document.getElementById('gallery-grid');
+        const submitBtn = document.querySelector('.submit-btn');
+
+        const cameraModal = document.getElementById('camera-modal');
+        const videoElement = document.getElementById('camera-feed');
+        const canvasElement = document.getElementById('camera-canvas');
+
+        // --- 1. UPLOAD FROM DEVICE LOGIC ---
+        deviceBox.addEventListener('click', () => {
+            // Reset value so if user selects same file again, "change" still fires
+            fileInput.value = '';
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const newFiles = Array.from(event.target.files);
+            addFilesToGallery(newFiles);
+        });
+
+        // --- 2. TAKE PHOTO LOGIC (Webcam) ---
+        cameraBox.addEventListener('click', async () => {
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = videoStream;
+                cameraModal.style.display = 'flex';
+            } catch (err) {
+                alert("Camera access denied or not available. Please use 'Upload from Device'.");
+            }
+        });
+
+        function closeCamera() {
+            cameraModal.style.display = 'none';
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        function takeSnapshot() {
+            const context = canvasElement.getContext('2d');
+            canvasElement.width = videoElement.videoWidth;
+            canvasElement.height = videoElement.videoHeight;
+            context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+
+            canvasElement.toBlob((blob) => {
+                const file = new File([blob], `camera_photo_${Date.now()}.jpg`, { type: "image/jpeg" });
+                addFilesToGallery([file]);
+                closeCamera();
+            }, 'image/jpeg');
+        }
+
+        // --- 3. GALLERY MANAGEMENT ---
+        function addFilesToGallery(newFiles) {
+            // Add new files to our master array
+            window.allFiles = [...window.allFiles, ...newFiles];
+            renderGallery();
+        }
+
+        function removeFile(index) {
+            // Remove file at specific index
+            window.allFiles.splice(index, 1);
+            renderGallery();
+        }
+
+        function renderGallery() {
+            // Clear current view
+            galleryGrid.innerHTML = '';
+
+            if (window.allFiles.length === 0) {
+                submitBtn.disabled = true;
+                return;
+            }
+
+            // Enable submit button since we have at least 1 file
+            submitBtn.disabled = false;
+
+            // Loop through all files and create thumbnails
+            window.allFiles.forEach((file, index) => {
+                const reader = new FileReader();
+
+                // Create DOM Elements
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'gallery-item';
+
+                const img = document.createElement('img');
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-thumb-btn';
+                deleteBtn.innerHTML = '✕';
+                deleteBtn.type = 'button';
+                deleteBtn.onclick = () => removeFile(index);
+
+                // Assemble
+                itemDiv.appendChild(img);
+                itemDiv.appendChild(deleteBtn);
+                galleryGrid.appendChild(itemDiv);
+
+                // Load Image Data
+                reader.onload = (e) => {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            console.log("Current Files for Backend:", window.allFiles);
+        }
+    </script>
+    <script>
+        // --- LOCATION LOGIC ---
+            const locationBtn = document.querySelector('.location-button');
+            const locationInput = document.querySelector('.location-input input'); // Targeting the input inside the div
+
+            locationBtn.addEventListener('click', () => {
+                // 1. Change button text to show it's working
+                const originalText = locationBtn.textContent;
+                locationBtn.textContent = "Locating...";
+                locationBtn.disabled = true;
+
+                // 2. Ask Browser for Location
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        // Success Function
+                        async (position) => {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+
+                            // Option A: Just show coordinates (Simple)
+                            // locationInput.value = `Lat: ${lat}, Lon: ${lon}`;
+
+                            // Option B: Get real address using free OpenStreetMap API (Better)
+                            try {
+                                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                                const data = await response.json();
+
+                                // Fill the input with the formatted address
+                                locationInput.value = data.display_name;
+
+                            } catch (error) {
+                                // If internet fails, just show coordinates
+                                locationInput.value = `Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}`;
+                            }
+
+                            // Reset button
+                            locationBtn.textContent = "Location Found ✓";
+                            setTimeout(() => {
+                                locationBtn.disabled = false;
+                                locationBtn.textContent = originalText;
+                            }, 2000);
+                        },
+                        // Error Function
+                        (error) => {
+                            alert("Unable to retrieve location. Please type it manually.");
+                            locationBtn.textContent = originalText;
+                            locationBtn.disabled = false;
+                        }
+                    );
+                } else {
+                    alert("Geolocation is not supported by your browser.");
+                    locationBtn.textContent = originalText;
+                    locationBtn.disabled = false;
+                }
+            });
+    </script>
+</body>
+
+</html>

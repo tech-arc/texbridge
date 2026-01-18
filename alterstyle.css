@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+
+/* 1. RESET DEFAULT BROWSER SPACING */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* font-size: 13px; */
+}
+
+/* 2. BODY: This centers the card on the screen perfectly */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+
+    /* Flexbox Magic to center everything */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Takes full screen height */
+    min-height: 100vh;
+    padding: 20px;
+    /* Small gap on mobile edges */
+}
+
+/* 3. THE CARD CONTAINER */
+.container {
+    /* Layout */
+    display: flex;
+    flex-direction: column;
+    /* Stacks items vertically */
+    align-items: center;
+    /* Centers items horizontally */
+    justify-content: center;
+    gap: 25px;
+    /* Space between sections */
+
+    /* Size Logic - Responsive without Media Queries */
+    width: 100%;
+    /* Fits mobile */
+    max-width: 700px;
+    /* Stops growing on desktop (matches your screenshot) */
+
+    /* Styling */
+    background-color: white;
+    /* Optional: Makes it look like a clean card */
+    padding: 30px;
+    border-radius: 12px;
+    /* Optional shadow to pop out like your screenshot might imply */
+    /* box-shadow: 0 5px 20px rgba(0,0,0,0.05); */
+    text-align: center;
+}
+
+/* 4. LOGO SECTION */
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.logoimg {
+    width: 100px;
+    /* Fixed readable size */
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.logo h1 {
+    font-family: "Roboto Slab", serif;
+    font-size: 2rem;
+    color: #444;
+}
+
+.logo h1 label {
+    color: rgb(175, 113, 72);
+    font-size: 2rem;
+}
+
+.logo p {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* 5. CONTENT SECTION */
+.cat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.Spara {
+    font-size: 1.1rem;
+    color: #777;
+    line-height: 1.5;
+    width: 90vw;
+    /* Keeps text from stretching too wide */
+}
+
+/* The "Permissions" Label Box */
+.cat label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    background-color: #f0f7ff;
+    /* Light blue background */
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+
+    /* Responsive width */
+    width: 100%;
+    max-width: 500px;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* 6. BUTTON */
+.get-started {
+    background-color: rgb(175, 113, 72);
+    border: none;
+    border-radius: 6px;
+    margin-top: 10px;
+    transition: transform 0.2s ease;
+    padding: 15px 40px;
+}
+
+.get-started:hover {
+    transform: scale(1.05);
+    /* Slight zoom on hover */
+    cursor: pointer;
+}
+
+.get-started a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 7. FOOTER SECTION */
+.image-section {
+    margin-top: 10px;
+}
+
+.image-section p {
+    color: #888;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.image-section strong {
+    color: #555;
+    font-size: 1rem;
+}

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Homepage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  </head>
+  <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+    *{
+      scrollbar-width: none;
+    }
+    body {
+  display: flex;             /* 1. Enable flexbox layout */
+  flex-direction: column;    /* 2. Stack children vertically */
+  min-height: 100vh;         /* 3. Ensure the container is at least the full viewport height */
+  margin: 0;
+  background: linear-gradient(90deg, #e2e2e2, rgba(233, 167, 141, 0.779));
+}
+main {
+  margin-bottom: 15vh;
+  /* Alternative: flex-grow: 1; pushes the element to fill the available space */
+}
+    .bg-white{
+      width: fit-content;
+      height: auto;
+    }
+    .bg-white h2{
+      font-size: 98%;
+    }
+    .bg-white p{
+      font-size: 80%;
+    }
+    .bg-white img{
+      /* height: 38.5vh; */
+      width: 20rem;
+      height: 70%;
+    }
+    /* .rec h2{
+      width: max-content;
+    } */
+    footer {
+        margin-top: auto;
+        background-color: #e0e0e0;
+        padding: 24px 0;
+      }
+      .text h1{
+        font-size: clamp(2.2vh, 4vw, 1rem);
+      }
+      .text p{
+        font-size: clamp(1.8vh, 4vw, 1rem);
+      }
+      .row{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .copyright-text p {
+        margin: 0;
+        font-size: 14px;
+        color: #2e2d2d;
+      }      
+      main{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .text{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 90vw;
+        height: 15vh;
+        /* padding: 10px 10px 0px 10px; */
+        border-radius: 10px;
+        background-color: #f9f9f9a4;
+      }
+      /* .text h1 {
+        width: 90vw;
+        height: 10vh;
+        padding: 10px 10px 0px 10px;
+        border-radius: 10px 10px 0px 0px;
+        background-color: #f9f9f9a4;
+      }
+      .text p {
+        width: 90vw;
+        height: 7vh;
+        position: relative;
+        bottom: 1.3vh;
+        padding: 0px 10px 0px 10px;
+        border-radius: 0px 0px 10px 10px;
+        background-color: #f9f9f9a4;
+      } */
+  </style>
+  <body>
+    <header>
+      <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="main.html" style="font-family: 'Roboto Slab', serif;">
+            <img src="logo.png" alt="Logo" width="30" height="30" style="border-radius: 50%" class="d-inline-block align-text-top">
+            Texbridge
+          </a>
+          <!-- <form action="/alterindex.html"> -->
+          <button onclick="redirectToPrevious()" style="font-weight: bold; padding-right: 2vw; margin-top: 1vh;">-Log out</button>
+          <!-- </form> -->
+        </div>
+      </nav>
+    </header>  
+      <main class="text-center mt-10">
+        <div class="text">
+        <h1 class="text-2xl font-semibold">What would you like to do today?</h1>
+        <p class="text-gray-600 mt-2">Choose from the options below to start your sustainable fashion journey</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 px-6">
+            <!-- Donate Clothes -->
+            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+                <h2 class="text-lg font-semibold flex items-center">
+                    <span class="mr-2">🎁</span> Donate Clothes
+                </h2>
+                <p class="text-gray-500 text-sm mt-2 text-center">Give your pre-loved clothes to those in need</p>
+                <img src="Donation.jpg" alt="Donate Clothes" class="my-4 rounded">
+                <a href="donationpage.html">
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Continue →
+                  </button>
+                </a>
+            </div>
+
+            <!-- Refashioned Clothes -->
+            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center rec">
+                <h2 class="text-lg font-semibold flex items-center">
+                    <span class="mr-2">🔄</span> Refashioned Clothes
+                </h2>
+                <p class="text-gray-500 text-sm mt-2 text-center">Shop quality refashioned clothes from various website</p>
+                <img src="Refashioned.jpg" alt="Refashioned Clothes" class="my-4 rounded re">
+                <a href="refashioned.html">
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Continue →
+                  </button>
+                </a>
+            </div>
+
+            <!-- Customize -->
+            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+                <h2 class="text-lg font-semibold flex items-center">
+                    <span class="mr-2">🎨</span> Customize
+                </h2>
+                <p class="text-gray-500 text-sm mt-2 text-center">Get creative with upcycling and alterations</p>
+                <img src="coustomised.png" alt="Customize Clothes" class="my-4 rounded">
+                <a href="recoustamize.html">
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Continue →
+                  </button>
+                </a>
+            </div>
+        </div>
+    </main>
+    <div class="spacer"></div>
+<footer class="copyright-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 text-center text-lg-left">
+        <div class="copyright-text">
+          <p id="copyright-footer">Copyright &copy; 2018, All Right Reserved</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+  </body>
+  <script>
+    function redirectToPrevious() {
+        // 1. Clear the custom saved URL so your "Go Back" button won't work anymore
+      localStorage.removeItem('homepage.html');
+
+      // 2. Clear any other session data (optional but recommended)
+      // localStorage.removeItem(''); 
+      // sessionStorage.clear();
+
+      // 3. Redirect to the Login/Home page using REPLACE
+      // 'replace' swaps the current history entry with the new one.
+      // This means the user CANNOT click the browser "Back" button to return here.
+      window.location.replace("index.html");
+      }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>
+</html>

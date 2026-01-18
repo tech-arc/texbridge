@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Photos</title>
+    <style>
+        /* --- CSS STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: white;
+        }
+
+        .btn {
+            border: none;
+            background: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .donate-badge {
+            display: inline-block;
+            background-color: #f0f0f0;
+            color: #555;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .upload-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .upload-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtitle {
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .upload-options {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .upload-option {
+            flex: 1;
+            height: 160px;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .upload-option:hover {
+            background-color: #f9f9f9;
+            border-color: #8cb4ea;
+        }
+
+        .upload-icon {
+            font-size: 24px;
+            color: #6a6a6a;
+            margin-bottom: 12px;
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .helper-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .back-button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .continue-button {
+            padding: 8px 16px;
+            background-color: #ccc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: not-allowed;
+            font-size: 14px;
+        }
+
+        .continue-button.active {
+            background-color: #8cb4ea;
+            cursor: pointer;
+        }
+
+        /* --- CAMERA OVERLAY STYLES --- */
+        #camera-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #camera-feed {
+            width: 90%;
+            max-width: 500px;
+            background: #000;
+            border-radius: 8px;
+            border: 2px solid white;
+        }
+
+        .camera-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .snap-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .cancel-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* --- NEW GALLERY STYLES (For Multiple Images) --- */
+        #gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            /* Makes it a square */
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .gallery-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .delete-thumb-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(255, 71, 87, 0.9);
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <button onclick="history.back()" class="btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="margin-right: 8px;">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+            Back to Dashboard
+        </button>
+    </div>
+
+    <div id="camera-modal">
+        <video id="camera-feed" autoplay playsinline></video>
+        <canvas id="camera-canvas" style="display:none;"></canvas>
+        <div class="camera-controls">
+            <button class="cancel-btn" onclick="closeCamera()">Cancel</button>
+            <button class="snap-btn" onclick="takeSnapshot()">Take Photo</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div style="text-align: center;">
+            <span class="donate-badge">Donate</span>
+        </div>
+        <h1>Donate Your Clothes</h1>
+        <p class="subtitle">Add photos of your clothes</p>
+
+        <div class="upload-container">
+            <h2 class="upload-title">Add Photos</h2>
+            <p class="upload-subtitle">Take photos of the clothes you're donating</p>
+
+            <div class="upload-options">
+                <div class="upload-option" id="camera-box">
+                    <div class="upload-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="6" width="20" height="12" rx="2" ry="2"></rect>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </div>
+                    <span class="upload-text">Take Photo</span>
+                </div>
+
+                <div class="upload-option" id="device-box">
+                    <div class="upload-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <span class="upload-text">Upload from Device</span>
+                    <input type="file" id="file-input" accept="image/*" multiple style="display: none;">
+                </div>
+            </div>
+
+            <div id="gallery-grid"></div>
+
+            <p class="helper-text">
+                Photos help us verify the condition and type of clothes you're donating. Add at least one photo to
+                continue.
+            </p>
+
+            <div class="buttons-container">
+                <button class="back-button" onclick="history.back()">Back</button>
+                <button class="continue-button" disabled>Add Photos to Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GLOBAL VARIABLES ---
+        window.allFiles = []; // USE THIS ARRAY FOR BACKEND
+        let videoStream = null;
+
+        // --- DOM ELEMENTS ---
+        const cameraBox = document.getElementById('camera-box');
+        const deviceBox = document.getElementById('device-box');
+        const fileInput = document.getElementById('file-input');
+        const galleryGrid = document.getElementById('gallery-grid');
+        const continueButton = document.querySelector('.continue-button');
+
+        const cameraModal = document.getElementById('camera-modal');
+        const videoElement = document.getElementById('camera-feed');
+        const canvasElement = document.getElementById('camera-canvas');
+
+        // --- 1. UPLOAD LOGIC ---
+        deviceBox.addEventListener('click', () => {
+            fileInput.value = ''; // Reset to allow re-selecting same files
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const newFiles = Array.from(event.target.files);
+            addFilesToGallery(newFiles);
+        });
+
+        // --- 2. CAMERA LOGIC ---
+        cameraBox.addEventListener('click', async () => {
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = videoStream;
+                cameraModal.style.display = 'flex';
+            } catch (err) {
+                alert("Camera access denied. Please use 'Upload from Device'.");
+            }
+        });
+
+        function closeCamera() {
+            cameraModal.style.display = 'none';
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        function takeSnapshot() {
+            const context = canvasElement.getContext('2d');
+            canvasElement.width = videoElement.videoWidth;
+            canvasElement.height = videoElement.videoHeight;
+            context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+
+            canvasElement.toBlob((blob) => {
+                const file = new File([blob], `camera_photo_${Date.now()}.jpg`, { type: "image/jpeg" });
+                addFilesToGallery([file]);
+                closeCamera();
+            }, 'image/jpeg');
+        }
+
+        // --- 3. GALLERY & DELETE LOGIC ---
+        function addFilesToGallery(newFiles) {
+            window.allFiles = [...window.allFiles, ...newFiles];
+            renderGallery();
+        }
+
+        function removeFile(index) {
+            window.allFiles.splice(index, 1);
+            renderGallery();
+        }
+
+        function renderGallery() {
+            galleryGrid.innerHTML = ''; // Clear current display
+
+            if (window.allFiles.length === 0) {
+                continueButton.disabled = true;
+                continueButton.classList.remove('active');
+                continueButton.textContent = "Add Photos to Continue";
+                return;
+            }
+
+            // Enable Button
+            continueButton.disabled = false;
+            continueButton.classList.add('active');
+            continueButton.textContent = "Continue";
+
+            // Loop through files and create thumbnails
+            window.allFiles.forEach((file, index) => {
+                const reader = new FileReader();
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'gallery-item';
+
+                const img = document.createElement('img');
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-thumb-btn';
+                deleteBtn.innerHTML = '✕';
+                deleteBtn.onclick = () => removeFile(index);
+
+                itemDiv.appendChild(img);
+                itemDiv.appendChild(deleteBtn);
+                galleryGrid.appendChild(itemDiv);
+
+                reader.onload = (e) => {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            console.log("Files ready for backend:", window.allFiles);
+        }
+    </script>
+</body>
+
+</html>
