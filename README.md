@@ -90,5 +90,37 @@ If you want to test the project locally:
 1. Clone the repository:
    ```bash
    git clone https://github.com/tech-arc/textile.git
+```
+
+# TexBridge - Login/Signup System
+
+A modern login and registration system with responsive UI and secure backend.
+
+## Features
+- User registration with email validation
+- Secure login with bcrypt password hashing
+- Session management
+- SQLite database
+- Responsive design
+- CORS enabled
+
+## Tech Stack
+- **Frontend**: HTML, CSS, JavaScript
+- **Backend**: Node.js, Express.js
+- **Database**: SQLite3
+- **Security**: bcrypt, express-session
+
+## Installation
+
+### Local Development
+1. Clone repository
+```bash
+git clone https://github.com/tech-arc/textile.git
+cd textile/backend
+npm install
+npm start
+```
+
+2. Open browser
 
 
