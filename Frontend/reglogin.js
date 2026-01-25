@@ -7,7 +7,7 @@ const registerForm = document.getElementById('registerForm');
 // Determine API base URL
 const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:3000' 
-    : 'https://your-render-app-name.onrender.com';
+    : 'https://texbridge.onrender.com';
 
 registerBtn.addEventListener('click', () => {
     container.classList.add('active');
