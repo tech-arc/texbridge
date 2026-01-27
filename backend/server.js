@@ -155,11 +155,20 @@ app.post('/logout', (req, res) => {
     res.json({ success: true, message: 'Logged out' });
 });
 
-// Google OAuth Routes
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+// Google OAuth Routes - Register
+app.get('/auth/google/register', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// Google OAuth Routes - Login
+app.get('/auth/google/login', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/auth/failure' }), (req, res) => {
-    res.redirect(process.env.FRONTEND_URL || 'http://localhost:5500/Frontend/homepage.html');
+    // Determine redirect based on the original request origin
+    const registerRedirect = 'https://tech-arc.github.io/texbridge/Frontend/reglogin.html';
+    const loginRedirect = 'https://tech-arc.github.io/texbridge/Frontend/homepage.html';
+    
+    // Default to login redirect
+    const redirectUrl = req.query.state && req.query.state.includes('register') ? registerRedirect : loginRedirect;
+    res.redirect(redirectUrl);
 });
 
 app.get('/auth/failure', (req, res) => {
