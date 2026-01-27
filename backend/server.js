@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,7 +21,9 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    password TEXT,
+    googleId TEXT UNIQUE,
+    profilePicture TEXT
 )`);
 
 // Middleware
@@ -34,6 +38,52 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Google OAuth Strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback"
+},
+async (accessToken, refreshToken, profile, done) => {
+    try {
+        db.get(`SELECT * FROM users WHERE googleId = ?`, [profile.id], (err, user) => {
+            if (err) return done(err);
+            
+            if (user) {
+                return done(null, user);
+            }
+            
+            // Create new user
+            const email = profile.emails[0].value;
+            const username = profile.displayName.replace(/\s+/g, '_') + '_' + Date.now();
+            const profilePicture = profile.photos[0]?.value || '';
+            
+            db.run(
+                `INSERT INTO users (username, email, googleId, profilePicture) VALUES (?, ?, ?, ?)`,
+                [username, email, profile.id, profilePicture],
+                function(err) {
+                    if (err) return done(err);
+                    return done(null, { id: this.lastID, username, email, googleId: profile.id, profilePicture });
+                }
+            );
+        });
+    } catch (err) {
+        done(err, null);
+    }
+}));
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+    db.get(`SELECT * FROM users WHERE id = ?`, [id], (err, user) => {
+        done(err, user);
+    });
+});
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -65,15 +115,21 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Login endpoint
+// Login endpoint - supports both username and email
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     
     if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password required' });
+        return res.status(400).json({ error: 'Username/Email and password required' });
     }
 
-    db.get(`SELECT * FROM users WHERE username = ?`, [username], async (err, user) => {
+    // Check if input is email or username
+    const isEmail = username.includes('@');
+    const query = isEmail 
+        ? `SELECT * FROM users WHERE email = ?` 
+        : `SELECT * FROM users WHERE username = ?`;
+
+    db.get(query, [username], async (err, user) => {
         if (err) {
             return res.status(500).json({ error: 'Server error' });
         }
@@ -97,6 +153,26 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
     req.session.destroy();
     res.json({ success: true, message: 'Logged out' });
+});
+
+// Google OAuth Routes
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/auth/failure' }), (req, res) => {
+    res.redirect(process.env.FRONTEND_URL || 'http://localhost:5500/Frontend/homepage.html');
+});
+
+app.get('/auth/failure', (req, res) => {
+    res.redirect(process.env.FRONTEND_URL + '/Frontend/reglogin.html' || 'http://localhost:5500/Frontend/reglogin.html');
+});
+
+// Check authentication status
+app.get('/auth/status', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ authenticated: true, user: req.user });
+    } else {
+        res.json({ authenticated: false });
+    }
 });
 
 app.listen(PORT, () => {
