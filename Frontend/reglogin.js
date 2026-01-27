@@ -1,76 +1,85 @@
-const container = document.querySelector('.container');
-const registerBtn = document.querySelector('.register-btn');
-const loginBtn = document.querySelector('.login-btn');
-const loginForm = document.getElementById('loginForm');
-const registerForm = document.getElementById('registerForm');
+<!DOCTYPE html>
+<html lang="en">
 
-// Determine API base URL
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000' 
-    : 'https://texbridge.onrender.com';
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup Form</title>
+    <link rel="stylesheet" href="reglogin.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
 
-registerBtn.addEventListener('click', () => {
-    container.classList.add('active');
-})
+<body>
 
-loginBtn.addEventListener('click', () => {
-    container.classList.remove('active');
-})
+    <!-- credits to the writter @leonam-silva-de-souza -->
+    <div class="container">
+        <div class="form-box login">
+            <form id="loginForm">
+                <h1>Login</h1>
+                <div class="input-box">
+                    <input type="text" placeholder="Username" name="username" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password" name="password" required>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <p>or login with social platforms</p>
+                <div class="social-icons">
+                    <a href="#"><i class='bx bxl-google'></i></a>
+                    <!-- <a href="#"><i class='bx bxl-facebook'></i></a>
+                    <a href="#"><i class='bx bxl-github'></i></a>
+                    <a href="#"><i class='bx bxl-linkedin'></i></a> -->
+                </div>
+            </form>
+        </div>
 
-// Login form submission
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const username = loginForm.querySelector('input[name="username"]').value;
-    const password = loginForm.querySelector('input[name="password"]').value;
-    
-    try {
-        const response = await fetch(`${API_URL}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ username, password })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            alert('Login successful!');
-            window.location.href = 'homepage.html';
-        } else {
-            alert(data.error);
-        }
-    } catch (err) {
-        alert('Error: ' + err.message);
-    }
-});
+        <div class="form-box register">
+            <form id="registerForm">
+                <h1>Registration</h1>
+                <div class="input-box">
+                    <input type="text" placeholder="Username" name="username" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="email" placeholder="Email" name="email" required>
+                    <i class='bx bxs-envelope'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password" name="password" required>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <button type="submit" class="btn">Register</button>
+                <p>or register with social platforms</p>
+                <div class="social-icons">
+                    <a href="#"><i class='bx bxl-google'></i></a>
+                    <!-- <a href="#"><i class='bx bxl-facebook'></i></a>
+                    <a href="#"><i class='bx bxl-github'></i></a>
+                    <a href="#"><i class='bx bxl-linkedin'></i></a> -->
+                </div>
+            </form>
+        </div>
 
-// Register form submission
-registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const username = registerForm.querySelector('input[name="username"]').value;
-    const email = registerForm.querySelector('input[name="email"]').value;
-    const password = registerForm.querySelector('input[name="password"]').value;
-    
-    try {
-        const response = await fetch(`${API_URL}/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ username, email, password })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            alert('Registration successful! Please login.');
-            container.classList.remove('active');
-            registerForm.reset();
-        } else {
-            alert(data.error);
-        }
-    } catch (err) {
-        alert('Error: ' + err.message);
-    }
-});
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Hello, Welcome!</h1>
+                <p>Don't have an account?</p>
+                <button type="submit" class="btn register-btn">Register</button>
+            </div>
+
+            <div class="toggle-panel toggle-right">
+                <h1>Welcome Back!</h1>
+                <p>Already have an account?</p>
+                <button type="submit" class="btn login-btn">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="reglogin.js"></script>
+</body>
+
+</html>
