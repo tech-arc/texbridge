@@ -163,7 +163,7 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 });
 
 app.get('/auth/failure', (req, res) => {
-    res.redirect(process.env.FRONTEND_URL + '/Frontend/reglogin.html' || 'http://localhost:5500/Frontend/reglogin.html');
+    res.redirect('https://tech-arc.github.io/texbridge/Frontend/reglogin.html');
 });
 
 // Check authentication status
