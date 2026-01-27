@@ -76,11 +76,14 @@ registerForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Google Login Handler
+// Google Login Handler - Different routes for register vs login
 const googleButtons = document.querySelectorAll('.social-icons a');
 googleButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
-        window.location.href = `${API_URL}/auth/google`;
+        // Check which form is currently active
+        const isRegisterActive = container.classList.contains('active');
+        const oauthRoute = isRegisterActive ? '/auth/google/register' : '/auth/google/login';
+        window.location.href = `${API_URL}${oauthRoute}`;
     });
 });
