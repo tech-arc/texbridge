@@ -21,13 +21,14 @@ loginBtn.addEventListener('click', () => {
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const username = loginForm.querySelector('input[placeholder="Username"]').value;
-    const password = loginForm.querySelector('input[placeholder="Password"]').value;
+    const username = loginForm.querySelector('input[name="username"]').value;
+    const password = loginForm.querySelector('input[name="password"]').value;
     
     try {
         const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({ username, password })
         });
         
@@ -48,14 +49,15 @@ loginForm.addEventListener('submit', async (e) => {
 registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const username = registerForm.querySelector('input[placeholder="Username"]').value;
-    const email = registerForm.querySelector('input[placeholder="Email"]').value;
-    const password = registerForm.querySelector('input[placeholder="Password"]').value;
+    const username = registerForm.querySelector('input[name="username"]').value;
+    const email = registerForm.querySelector('input[name="email"]').value;
+    const password = registerForm.querySelector('input[name="password"]').value;
     
     try {
         const response = await fetch(`${API_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({ username, email, password })
         });
         
