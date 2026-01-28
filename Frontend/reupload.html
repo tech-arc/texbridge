@@ -157,6 +157,17 @@
             cursor: pointer;
         }
 
+        .continue-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .continue-button.loading {
+            background-color: #5470b7 !important;
+            color: white !important;
+        }
+
         /* --- CAMERA OVERLAY STYLES --- */
         #camera-modal {
             display: none;
@@ -455,6 +466,23 @@
                 return;
             }
 
+            // Check if user is still authenticated
+            try {
+                const authCheck = await fetch(`${API_URL}/auth/status`, {
+                    credentials: 'include'
+                });
+                const authData = await authCheck.json();
+                
+                if (!authData.authenticated) {
+                    alert('Session expired. Please login again.');
+                    window.location.href = 'reglogin.html';
+                    return;
+                }
+            } catch (err) {
+                alert('Error checking authentication: ' + err.message);
+                return;
+            }
+
             const donationData = JSON.parse(donationDataStr);
 
             // Create FormData for multipart submission
@@ -477,6 +505,7 @@
 
             // Disable button and show loading state
             continueButton.disabled = true;
+            continueButton.classList.add('loading');
             continueButton.textContent = "Submitting...";
 
             try {
@@ -493,13 +522,21 @@
                     localStorage.removeItem('donationData'); // Clear stored data
                     window.location.href = 'homepage.html';
                 } else {
-                    alert('Error: ' + data.error);
+                    // Check if it's an auth error
+                    if (response.status === 401) {
+                        alert('Session expired. Please login again.');
+                        window.location.href = 'reglogin.html';
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
                     continueButton.disabled = false;
+                    continueButton.classList.remove('loading');
                     continueButton.textContent = "Continue";
                 }
             } catch (err) {
                 alert('Error submitting donation: ' + err.message);
                 continueButton.disabled = false;
+                continueButton.classList.remove('loading');
                 continueButton.textContent = "Continue";
             }
         });
