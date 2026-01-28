@@ -6,9 +6,43 @@ const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads/donations');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadsDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+    fileFilter: (req, file, cb) => {
+        // Only allow image files
+        const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (allowedMimes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed'));
+        }
+    }
+});
 
 // Database setup
 const db = new sqlite3.Database('./users.db', (err) => {
@@ -24,6 +58,23 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
     password TEXT,
     googleId TEXT UNIQUE,
     profilePicture TEXT
+)`);
+
+// Create donations table
+db.run(`CREATE TABLE IF NOT EXISTS donations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userId INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    category TEXT NOT NULL,
+    condition TEXT NOT NULL,
+    description TEXT NOT NULL,
+    address TEXT NOT NULL,
+    contact TEXT NOT NULL,
+    location_lat REAL,
+    location_lon REAL,
+    photos TEXT,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id)
 )`);
 
 // Middleware
@@ -182,6 +233,88 @@ app.get('/auth/status', (req, res) => {
     } else {
         res.json({ authenticated: false });
     }
+});
+
+// Middleware to check if user is authenticated
+const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.status(401).json({ error: 'Unauthorized. Please login first.' });
+    }
+};
+
+// POST - Submit donation with photos
+app.post('/api/donations', isAuthenticated, upload.array('photos', 10), (req, res) => {
+    const { quantity, category, condition, description, address, contact, location_lat, location_lon } = req.body;
+    const userId = req.user.id;
+
+    // Validate all required fields
+    if (!quantity || !category || !condition || !description || !address || !contact) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Check if at least one photo was uploaded
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ error: 'At least one photo is required' });
+    }
+
+    // Get file paths
+    const photoPaths = req.files.map(file => file.path).join(',');
+
+    db.run(
+        `INSERT INTO donations (userId, quantity, category, condition, description, address, contact, location_lat, location_lon, photos) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [userId, quantity, category, condition, description, address, contact, location_lat || null, location_lon || null, photoPaths],
+        function(err) {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ error: 'Failed to save donation' });
+            }
+            res.json({ 
+                success: true, 
+                message: 'Donation submitted successfully!',
+                donationId: this.lastID
+            });
+        }
+    );
+});
+
+// GET - Retrieve all donations (with optional user filter)
+app.get('/api/donations', (req, res) => {
+    const userId = req.query.userId;
+    
+    let query = 'SELECT * FROM donations ORDER BY createdAt DESC';
+    let params = [];
+
+    if (userId) {
+        query = 'SELECT * FROM donations WHERE userId = ? ORDER BY createdAt DESC';
+        params = [userId];
+    }
+
+    db.all(query, params, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Failed to fetch donations' });
+        }
+        res.json({ success: true, donations: rows });
+    });
+});
+
+// GET - Retrieve single donation by ID
+app.get('/api/donations/:id', (req, res) => {
+    const donationId = req.params.id;
+
+    db.get('SELECT * FROM donations WHERE id = ?', [donationId], (err, row) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Failed to fetch donation' });
+        }
+        if (!row) {
+            return res.status(404).json({ error: 'Donation not found' });
+        }
+        res.json({ success: true, donation: row });
+    });
 });
 
 app.listen(PORT, () => {
