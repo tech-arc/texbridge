@@ -326,9 +326,10 @@
     </div>
 
     <script>
-        // --- GLOBAL VARIABLES ---
-        window.allFiles = []; // USE THIS ARRAY FOR BACKEND
-        let videoStream = null;
+        // --- API URL ---
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000' 
+            : 'https://texbridge.onrender.com';
 
         // --- DOM ELEMENTS ---
         const cameraBox = document.getElementById('camera-box');
@@ -435,6 +436,69 @@
 
             console.log("Files ready for backend:", window.allFiles);
         }
+
+        // --- 4. SUBMIT TO BACKEND ---
+        continueButton.addEventListener('click', async () => {
+            if (window.allFiles.length === 0) {
+                alert('Please add at least one photo');
+                return;
+            }
+
+            // Get donation data from localStorage
+            const donationDataStr = localStorage.getItem('donationData');
+            if (!donationDataStr) {
+                alert('Error: Donation data not found. Please go back and fill the form again.');
+                return;
+            }
+
+            const donationData = JSON.parse(donationDataStr);
+
+            // Create FormData for multipart submission
+            const formData = new FormData();
+            
+            // Add donation data
+            formData.append('quantity', donationData.quantity);
+            formData.append('category', donationData.category);
+            formData.append('condition', donationData.condition);
+            formData.append('description', donationData.description);
+            formData.append('address', donationData.address);
+            formData.append('contact', donationData.contact);
+            formData.append('location_lat', donationData.location_lat);
+            formData.append('location_lon', donationData.location_lon);
+
+            // Add photos
+            window.allFiles.forEach((file, index) => {
+                formData.append('photos', file, file.name);
+            });
+
+            // Disable button and show loading state
+            continueButton.disabled = true;
+            continueButton.textContent = "Submitting...";
+
+            try {
+                const response = await fetch(`${API_URL}/api/donations`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Donation submitted successfully! Thank you for your contribution.');
+                    localStorage.removeItem('donationData'); // Clear stored data
+                    window.location.href = 'homepage.html';
+                } else {
+                    alert('Error: ' + data.error);
+                    continueButton.disabled = false;
+                    continueButton.textContent = "Continue";
+                }
+            } catch (err) {
+                alert('Error submitting donation: ' + err.message);
+                continueButton.disabled = false;
+                continueButton.textContent = "Continue";
+            }
+        });
     </script>
 </body>
 

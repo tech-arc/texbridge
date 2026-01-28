@@ -140,7 +140,7 @@
                 <div class="section-title">Clothes Details</div>
                 <div class="hint">Tell us about the clothes you're donating</div>
             </div>
-            <form action="reupload.html">
+            <form id="donationForm">
             <div class="form-section">
                 <label for="quantity" style="font-weight: bold;">How many items are you donating?</label>
                 <input type="number" id="quantity" name="quantity" placeholder="e.g. 5" min="1" required>
@@ -254,6 +254,63 @@
             locationBtn.textContent = originalText;
             locationBtn.disabled = false;
         }
+    });
+
+    // Determine API base URL
+    const API_URL = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000' 
+        : 'https://texbridge.onrender.com';
+
+    // Handle donation form submission
+    const donationForm = document.getElementById('donationForm');
+    let capturedLocation = { lat: null, lon: null };
+
+    // Store location from geolocation
+    document.querySelector('.location-button').addEventListener('click', function(e) {
+        // Capture location coordinates after successful geolocation
+        const locationDisplay = document.querySelector('.location-text');
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                capturedLocation.lat = position.coords.latitude;
+                capturedLocation.lon = position.coords.longitude;
+            });
+        }
+    });
+
+    donationForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Collect form data
+        const quantity = document.getElementById('quantity').value;
+        const category = document.getElementById('category').value;
+        const condition = document.getElementById('condition').value;
+        const description = document.getElementById('description').value;
+        const address = document.getElementById('address').value;
+        const contact = document.getElementById('contact').value;
+        const terms = document.getElementById('terms').checked;
+
+        // Validate terms
+        if (!terms) {
+            alert('Please agree to the terms and conditions');
+            return;
+        }
+
+        // Save donation data to localStorage
+        const donationData = {
+            quantity: parseInt(quantity),
+            category,
+            condition,
+            description,
+            address,
+            contact,
+            location_lat: capturedLocation.lat,
+            location_lon: capturedLocation.lon
+        };
+
+        localStorage.setItem('donationData', JSON.stringify(donationData));
+
+        // Redirect to photo upload page
+        window.location.href = 'reupload.html';
     });
 </script>
 </html>
