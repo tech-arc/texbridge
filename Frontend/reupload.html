@@ -326,6 +326,10 @@
     </div>
 
     <script>
+        // --- GLOBAL VARIABLES ---
+        window.allFiles = []; // USE THIS ARRAY FOR BACKEND
+        let videoStream = null;
+
         // --- API URL ---
         const API_URL = window.location.hostname === 'localhost' 
             ? 'http://localhost:3000' 
