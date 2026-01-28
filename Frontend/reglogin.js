@@ -36,6 +36,10 @@ loginForm.addEventListener('submit', async (e) => {
         const data = await response.json();
         
         if (data.success) {
+            // Store user info in localStorage for later use
+            if (data.user) {
+                localStorage.setItem('user', JSON.stringify(data.user));
+            }
             alert('Login successful!');
             window.location.href = 'homepage.html';
         } else {

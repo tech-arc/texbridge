@@ -466,27 +466,22 @@
                 return;
             }
 
-            // Check if user is still authenticated
-            try {
-                const authCheck = await fetch(`${API_URL}/auth/status`, {
-                    credentials: 'include'
-                });
-                const authData = await authCheck.json();
-                
-                if (!authData.authenticated) {
-                    alert('Session expired. Please login again.');
-                    window.location.href = 'reglogin.html';
-                    return;
-                }
-            } catch (err) {
-                alert('Error checking authentication: ' + err.message);
+            // Get user info from localStorage
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                alert('Error: User session not found. Please login again.');
+                window.location.href = 'reglogin.html';
                 return;
             }
 
             const donationData = JSON.parse(donationDataStr);
+            const user = JSON.parse(userStr);
 
             // Create FormData for multipart submission
             const formData = new FormData();
+            
+            // Add user ID
+            formData.append('userId', user.id);
             
             // Add donation data
             formData.append('quantity', donationData.quantity);
@@ -522,13 +517,7 @@
                     localStorage.removeItem('donationData'); // Clear stored data
                     window.location.href = 'homepage.html';
                 } else {
-                    // Check if it's an auth error
-                    if (response.status === 401) {
-                        alert('Session expired. Please login again.');
-                        window.location.href = 'reglogin.html';
-                    } else {
-                        alert('Error: ' + data.error);
-                    }
+                    alert('Error: ' + data.error);
                     continueButton.disabled = false;
                     continueButton.classList.remove('loading');
                     continueButton.textContent = "Continue";
