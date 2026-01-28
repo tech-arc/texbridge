@@ -196,7 +196,15 @@ app.post('/login', (req, res) => {
         }
 
         req.session.userId = user.id;
-        res.json({ success: true, message: 'Login successful' });
+        res.json({ 
+            success: true, 
+            message: 'Login successful',
+            user: { 
+                id: user.id, 
+                username: user.username, 
+                email: user.email 
+            }
+        });
     });
 });
 
@@ -245,12 +253,11 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // POST - Submit donation with photos
-app.post('/api/donations', isAuthenticated, upload.array('photos', 10), (req, res) => {
-    const { quantity, category, condition, description, address, contact, location_lat, location_lon } = req.body;
-    const userId = req.user.id;
+app.post('/api/donations', upload.array('photos', 10), (req, res) => {
+    const { quantity, category, condition, description, address, contact, location_lat, location_lon, userId } = req.body;
 
     // Validate all required fields
-    if (!quantity || !category || !condition || !description || !address || !contact) {
+    if (!userId || !quantity || !category || !condition || !description || !address || !contact) {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
