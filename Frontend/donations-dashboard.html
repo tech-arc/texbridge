@@ -387,9 +387,11 @@
                         <div class="donation-field">
                             <div class="field-label">Photos</div>
                             <div class="photos">
-                                ${donation.photos.split(',').map(photo => `
-                                    <img class="photo-thumbnail" src="${photo}" alt="Donation photo" onclick="openPhotoModal('${photo}')">
-                                `).join('')}
+                                ${donation.photos.split(',').map(photo => {
+                                    // Convert file path to proper URL
+                                    const photoUrl = photo.startsWith('http') ? photo : `${API_URL}/${photo}`;
+                                    return `<img class="photo-thumbnail" src="${photoUrl}" alt="Donation photo" onclick="openPhotoModal('${photoUrl}')">`;
+                                }).join('')}
                             </div>
                         </div>
                     ` : ''}
