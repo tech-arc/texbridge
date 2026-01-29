@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donations Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            background-color: #e0e0e0;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+
+        button.active {
+            background-color: #5470b7;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #8cb4ea;
+            color: white;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #5470b7;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .donations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .donation-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .donation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .donation-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .donation-id {
+            font-weight: bold;
+            color: #5470b7;
+        }
+
+        .donation-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .donation-field {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .field-label {
+            font-weight: bold;
+            color: #555;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .field-value {
+            color: #333;
+            margin-top: 5px;
+            word-break: break-word;
+        }
+
+        .photos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .photo-thumbnail {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .photo-thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+        .location {
+            color: #5470b7;
+            font-size: 12px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .donations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .filter-buttons {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Donations Dashboard</h1>
+            <div class="filter-buttons">
+                <button class="active" onclick="filterDonations('all')">All Donations</button>
+                <button onclick="filterDonations('recent')">Recent</button>
+                <button onclick="location.href='homepage.html'">Back Home</button>
+            </div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+
+        <div id="error" class="error" style="display:none;"></div>
+
+        <div class="donations-grid" id="donationsGrid">
+            <div class="loading">Loading donations...</div>
+        </div>
+    </div>
+
+    <div class="modal" id="photoModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closePhotoModal()">&times;</span>
+            <img id="modalPhoto" src="" alt="Full size photo" style="max-width: 100%; max-height: 80vh;">
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000' 
+            : 'https://texbridge.onrender.com';
+
+        let allDonations = [];
+
+        // Load donations on page load
+        document.addEventListener('DOMContentLoaded', loadDonations);
+
+        async function loadDonations() {
+            try {
+                const response = await fetch(`${API_URL}/api/donations`);
+                const data = await response.json();
+
+                if (data.success && data.donations) {
+                    allDonations = data.donations;
+                    displayStats();
+                    displayDonations(allDonations);
+                } else {
+                    showError('Failed to load donations');
+                }
+            } catch (err) {
+                showError('Error loading donations: ' + err.message);
+            }
+        }
+
+        function displayStats() {
+            const statsHtml = `
+                <div class="stat-card">
+                    <div class="stat-number">${allDonations.length}</div>
+                    <div class="stat-label">Total Donations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${allDonations.reduce((sum, d) => sum + parseInt(d.quantity || 0), 0)}</div>
+                    <div class="stat-label">Total Items</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${getUniqueCategories().length}</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+            `;
+            document.getElementById('stats').innerHTML = statsHtml;
+        }
+
+        function getUniqueCategories() {
+            return [...new Set(allDonations.map(d => d.category))];
+        }
+
+        function displayDonations(donations) {
+            const donationsGrid = document.getElementById('donationsGrid');
+
+            if (donations.length === 0) {
+                donationsGrid.innerHTML = '<div class="no-data">No donations found</div>';
+                return;
+            }
+
+            donationsGrid.innerHTML = donations.map(donation => `
+                <div class="donation-card">
+                    <div class="donation-header">
+                        <span class="donation-id">#${donation.id}</span>
+                        <span class="donation-date">${new Date(donation.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    
+                    <div class="donation-field">
+                        <div class="field-label">Category</div>
+                        <div class="field-value">${donation.category}</div>
+                    </div>
+
+                    <div class="donation-field">
+                        <div class="field-label">Quantity</div>
+                        <div class="field-value">${donation.quantity} items</div>
+                    </div>
+
+                    <div class="donation-field">
+                        <div class="field-label">Condition</div>
+                        <div class="field-value">${donation.condition}</div>
+                    </div>
+
+                    <div class="donation-field">
+                        <div class="field-label">Description</div>
+                        <div class="field-value">${donation.description.substring(0, 100)}${donation.description.length > 100 ? '...' : ''}</div>
+                    </div>
+
+                    <div class="donation-field">
+                        <div class="field-label">Pickup Address</div>
+                        <div class="field-value">${donation.address.substring(0, 50)}${donation.address.length > 50 ? '...' : ''}</div>
+                    </div>
+
+                    <div class="donation-field">
+                        <div class="field-label">Contact</div>
+                        <div class="field-value">${donation.contact}</div>
+                    </div>
+
+                    ${donation.location_lat && donation.location_lon ? `
+                        <div class="donation-field">
+                            <div class="field-label">Location</div>
+                            <div class="location">
+                                <a href="https://maps.google.com/?q=${donation.location_lat},${donation.location_lon}" target="_blank">
+                                    📍 View on Map
+                                </a>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${donation.photos ? `
+                        <div class="donation-field">
+                            <div class="field-label">Photos</div>
+                            <div class="photos">
+                                ${donation.photos.split(',').map(photo => `
+                                    <img class="photo-thumbnail" src="${photo}" alt="Donation photo" onclick="openPhotoModal('${photo}')">
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function filterDonations(filter) {
+            // Update button states
+            document.querySelectorAll('.filter-buttons button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            let filtered = allDonations;
+
+            if (filter === 'recent') {
+                filtered = allDonations.slice(0, 10);
+            }
+
+            displayDonations(filtered);
+        }
+
+        function openPhotoModal(photoUrl) {
+            document.getElementById('modalPhoto').src = photoUrl;
+            document.getElementById('photoModal').classList.add('active');
+        }
+
+        function closePhotoModal() {
+            document.getElementById('photoModal').classList.remove('active');
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('donationsGrid').innerHTML = '';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('photoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePhotoModal();
+            }
+        });
+    </script>
+</body>
+</html>
