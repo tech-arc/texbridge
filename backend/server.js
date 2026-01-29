@@ -84,6 +84,10 @@ app.use(cors({
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Serve uploaded files as static files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use(session({
     secret: 'your-secret-key-change-this',
     resave: false,
