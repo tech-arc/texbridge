@@ -4,36 +4,116 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Refashioned Clothes</title>
-  <link rel="stylesheet" href="refurbished.css">
+  <link rel="stylesheet" href="refashioned.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+      tailwind.config = {
+          theme: {
+              extend: {
+                  colors: {
+                      brand: {
+                          50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 
+                          600: '#16a34a', 700: '#15803d', 900: '#14532d'
+                      },
+                      primary: '#4a69bd',
+                      lightBlue: '#e8eef9'
+                  }
+              }
+          }
+      }
+  </script>
+  <style>
+    #marketplace {
+      padding-top: 2rem;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Header Styles specific to cart/wishlist integration */
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      margin-left: auto; /* Pushes actions to the right */
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn:hover {
+      background: #e8eef9;
+      transform: scale(1.1);
+    }
+
+    .badge, .cart-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #4a69bd;
+      color: white;
+      font-size: 10px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    
+    /* Ensure header alignment */
+    .header {
+      display: flex;
+      justify-content: space-between; /* Space between back button and actions */
+      align-items: center;
+    }
+    
+    /* Ensure the link wraps the card properly without ruining layout */
+    a.product-card-link {
+        display: block;
+        height: 100%;
+        text-decoration: none;
+        color: inherit;
+    }
+  </style>
 </head>
-<style>
-  /* *{
-    margin: 0;
-    padding: 0;
-  } */
-  /* body{
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    min-height: 100vh;
-  } */
-  footer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #e0e0e0;
-  }
-</style>
 <body>
+
   <div class="header">
-    <!-- <a href="main.html" class="back-link"> -->
       <button onclick="history.back()" class="btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top: 0.5vh;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
         <path d="M15 18l-6-6 6-6"/>
       </svg>
       Back to Dashboard
       </button>
-    <!-- </a> -->
+
+      <div class="header-actions">
+        <button class="icon-btn" onclick="window.location.href='cart.html'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+            <circle cx="9" cy="21" r="1"/>
+            <circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+          </svg>
+          <span class="badge cart-badge" id="cartBadge">0</span>
+        </button>
+        <button class="icon-btn" onclick="window.location.href='wishlist.html'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+          </svg>
+          <span class="badge" id="wishlistBadge" style="display: none;">0</span>
+        </button>
+      </div>
   </div>
 
   <div class="container">
@@ -70,142 +150,181 @@
         </div>
         <input type="text" placeholder="Search by item, size, or brand">
       </div>
-      <button class="button secondary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"/>
-          <polyline points="19 12 12 19 5 12"/>
-        </svg>
-        Refresh
-      </button>
-      <button class="button primary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"/>
-          <line x1="5" y1="12" x2="19" y2="12"/>
-        </svg>
-        Add Item
-      </button>
     </div>
 
-    <div class="tab-section">
-      <div class="tab">Shop Refashioned</div>
-      <div class="tab">My Items</div>
-    </div>
-
-    <div class="product-grid">
-      <div class="product-card">
-        <div class="product-image">
-          <img src="Images/denim.jpg" alt="Denim Jacket">
-          <div class="sale-tag">40% OFF</div>
-          <button class="wishlist-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </button>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">Denim Jacket</h3>
-          <p class="product-description">Repaired Levi jacket, perfect for fall</p>
-          <div class="product-price">
-            <span class="brand">PeopleFashion</span>
-            <span class="sale-price">$35.99</span>
-            <span class="original-price">$59.99</span>
+    <section id="marketplace" class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6" style="justify-content: center;">
+              
+              <div class="flex gap-2 bg-gray-100 p-1.5 rounded-full overflow-x-auto no-scrollbar w-full md:w-auto">
+                  <button class="filter-btn active whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition bg-white text-gray-900 shadow-sm" data-filter="all">All</button>
+                  <button class="filter-btn whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition text-gray-500 hover:text-gray-900" data-filter="Cotton">Cotton</button>
+                  <button class="filter-btn whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition text-gray-500 hover:text-gray-900" data-filter="Denim">Denim</button>
+                  <button class="filter-btn whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition text-gray-500 hover:text-gray-900" data-filter="Synthetic">Synthetic</button>
+              </div>
           </div>
-          <button class="view-details">View Details</button>
-        </div>
-      </div>
 
-      <div class="product-card">
-        <div class="product-image">
-          <img src="Images/summer.jpg" alt="Summer Dress">
-          <div class="sale-tag">20% OFF</div>
-          <button class="wishlist-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </button>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">Summer Dress</h3>
-          <p class="product-description">Smart summer dress, with a few fixes</p>
-          <div class="product-price">
-            <span class="brand">DressOverDress</span>
-            <span class="sale-price">$28.50</span>
-            <span class="original-price">$38.00</span>
+          <div id="listings-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           </div>
-          <button class="view-details">View Details</button>
-        </div>
-      </div>
 
-      <div class="product-card">
-        <div class="product-image">
-          <img src="Images/winter.jpg" alt="Winter Coat">
-          <div class="sale-tag">25% OFF</div>
-          <button class="wishlist-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </button>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">Winter Coat</h3>
-          <p class="product-description">Vintage Burberry, worn just last season</p>
-          <div class="product-price">
-            <span class="brand">FashionBoutique</span>
-            <span class="sale-price">$75.00</span>
-            <span class="original-price">$100.00</span>
+          <div class="mt-12 text-center">
+              <button class="border border-gray-300 text-gray-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-50 transition">Load More</button>
           </div>
-          <button class="view-details">View Details</button>
-        </div>
       </div>
+    </section>
 
-      <div class="product-card">
-        <div class="product-image">
-          <img src="Images/sneakers.jpg" alt="Sneakers">
-          <div class="sale-tag">30% OFF</div>
-          <button class="wishlist-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </button>
-        </div>
-        <div class="product-info">
-          <h3 class="product-title">Sneakers</h3>
-          <p class="product-description">Like new, slight left sole wear.</p>
-          <div class="product-price">
-            <span class="brand">FashionRetake</span>
-            <span class="sale-price">$42.00</span>
-            <span class="original-price">$60.00</span>
-          </div>
-          <button class="view-details">View Details</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="view-more">
-      <a href="#">View More Items</a>
-    </div>
-
-    <!-- <div class="footer">
-      <a href="main.html">
-        <button onclick="history.back()" class="btn2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 18l-6-6 6-6"/>
-        </svg>
-        Back to Dashboard
-        </button>
-      </a>
-    </div> -->
   </div>
+  
   <footer class="copyright-area">
     <div class="container">
       <div class="row">
         <div class="col-xl-6 col-lg-6 text-center text-lg-left">
           <div class="copyright-text">
-            <p id="copyright-footer">Copyright &copy; 2018, All Right Reserved</p>
+            <p id="copyright-footer">Copyright &copy; 2025, All Right Reserved</p>
           </div>
         </div>
       </div>
     </div>
   </footer>
+  
+  <!-- Cart Manager Script -->
+  <script src="cart-manager.js"></script>
+  <script src="wishlist-manager.js"></script>
+  
+  <script>
+    // 1. THE DATA
+    const listings = [
+        { 
+          id: 1, 
+          title: "Patchwork Jeans", 
+          category: "Denim", 
+          price: "₹1200", 
+          originalPrice: "₹1500", 
+          hasDiscount: true,
+          img: "https://i.pinimg.com/1200x/50/77/5d/50775ddd9b6b144bdad799f90aa33f42.jpg" 
+        },
+        { 
+          id: 2, 
+          title: "Blue Denim Scraps", 
+          category: "Denim", 
+          price: "₹600", 
+          originalPrice: null, 
+          hasDiscount: false,
+          img: "https://i.pinimg.com/1200x/a9/0e/30/a90e30389a8479abdd575bc792dda1ab.jpg" 
+        },
+        { 
+          id: 3, 
+          title: "Synthetic Fabric Art", 
+          category: "Synthetic", 
+          price: "₹1200", 
+          originalPrice: "₹1600", 
+          hasDiscount: true,
+          img: "https://i.pinimg.com/1200x/2c/b0/b5/2cb0b52ceda391fd75a728ac69f9cff2.jpg" 
+        },
+        { 
+          id: 4, 
+          title: "Wool Carpet", 
+          category: "Wool", 
+          price: "₹300", 
+          originalPrice: null, 
+          hasDiscount: false,
+          img: "https://i.pinimg.com/1200x/9f/51/d5/9f51d54d1f1d62848ffc7c7eb77b21eb.jpg"
+        },
+        { 
+          id: 5, 
+          title: "Cotton Hand Bags", 
+          category: "Cotton", 
+          price: "₹70", 
+          originalPrice: "₹150", 
+          hasDiscount: true,
+          img: "https://i.pinimg.com/1200x/7a/aa/67/7aaa67dd4875807d3e11229930995ab0.jpg" 
+        },
+        { 
+          id: 6, 
+          title: "Zip Jacket",
+          category: "Synthetic", 
+          price: "₹3000", 
+          originalPrice: "₹4000", 
+          hasDiscount: false,
+          img: "https://images.asket.com/pim-images/1755181789-asket_zjt-ma-dkn_thumbnail.jpg?auto=format&q=80&w=1024" 
+        }
+    ];
+
+    const grid = document.getElementById('listings-grid');
+    const btns = document.querySelectorAll('.filter-btn');
+
+    function render(filter = 'all') {
+        if(!grid) return;
+        grid.innerHTML = '';
+        const filtered = filter === 'all' ? listings : listings.filter(i => i.category === filter);
+        
+        filtered.forEach(item => {
+            // Price logic
+            let priceHtml = '';
+            if (item.hasDiscount) {
+                priceHtml = `
+                    <div class="flex flex-col items-start">
+                        <span class="text-xs text-gray-400 line-through">${item.originalPrice}</span>
+                        <span class="font-bold text-lg text-brand-600">${item.price}</span>
+                    </div>
+                `;
+            } else {
+                priceHtml = `<span class="font-bold text-lg text-gray-900">${item.price}</span>`;
+            }
+
+            // Card HTML Content
+            const cardContent = `
+                <div class="h-40 md:h-52 overflow-hidden relative">
+                    <img src="${item.img}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded shadow text-gray-800">${item.category}</div>
+                    ${item.hasDiscount ? '<div class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow">Sale</div>' : ''}
+                </div>
+                <div class="p-4 flex flex-col flex-grow justify-between">
+                    <div>
+                        <h3 class="font-bold text-gray-900 text-sm md:text-base mb-2 group-hover:text-brand-600 transition line-clamp-2">${item.title}</h3>
+                    </div>
+                    <div class="flex justify-between items-center pt-3 border-t border-gray-50 mt-2">
+                        ${priceHtml}
+                        <button class="bg-gray-900 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-brand-600 transition flex-shrink-0 ml-2">
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // THE REDIRECT LOGIC
+            let el = document.createElement('a');
+            el.className = 'product-card-link group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full';
+            
+            // Set href based on item id
+            const detailsPages = {
+                1: 'prodetails1.html',
+                2: 'prodetails2.html',
+                3: 'prodetails3.html',
+                4: 'prodetails4.html',
+                5: 'prodetails5.html',
+                6: 'prodetails6.html'
+            };
+            
+            el.href = detailsPages[item.id] || '#';
+            el.innerHTML = cardContent;
+            grid.appendChild(el);
+        });
+    }
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            btns.forEach(b => {
+                b.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
+                b.classList.add('text-gray-500');
+            });
+            btn.classList.remove('text-gray-500');
+            btn.classList.add('bg-white', 'text-gray-900', 'shadow-sm');
+            render(btn.dataset.filter);
+        });
+    });
+
+    render();
+  </script>
 </body>
 </html>

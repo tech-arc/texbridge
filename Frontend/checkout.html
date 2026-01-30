@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Refashioned Clothes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-blue: #4a69bd;
+      --light-blue: #e8eef9;
+      --dark-text: #333;
+      --medium-text: #666;
+      --light-text: #888;
+      --background: #f8f9fa;
+      --white: #ffffff;
+      --border: #e0e0e0;
+      --success: #27ae60;
+      --danger: #e74c3c;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      color: var(--dark-text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+    }
+
+    /* Sections */
+    .section-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    /* Address Selection */
+    .saved-addresses {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .address-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .address-card:hover {
+      border-color: var(--primary-blue);
+    }
+
+    .address-card.selected {
+      border-color: var(--primary-blue);
+      background-color: var(--light-blue);
+    }
+
+    .address-radio {
+      margin-top: 4px;
+      accent-color: var(--primary-blue);
+    }
+
+    .address-content {
+      flex: 1;
+    }
+
+    .address-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .address-header h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .address-type-tag {
+      background: #eee;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: 8px;
+      color: #555;
+    }
+
+    .address-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 4px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .edit-btn {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary-blue);
+      padding: 4px 8px;
+    }
+    
+    .edit-btn:hover {
+      background: rgba(74, 105, 189, 0.1);
+    }
+
+    .delete-btn {
+      color: var(--danger);
+    }
+    
+    .delete-btn:hover {
+      background: rgba(231, 76, 60, 0.1);
+    }
+
+    .address-text {
+      font-size: 14px;
+      color: var(--medium-text);
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+
+    /* Add New Address Form */
+    .new-address-btn {
+      color: var(--primary-blue);
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .address-form {
+      display: none;
+      background: #fcfcfc;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      animation: slideDown 0.3s ease;
+    }
+
+    .address-form.active {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .location-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--light-blue);
+      color: var(--primary-blue);
+      border: 1px dashed var(--primary-blue);
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      transition: all 0.2s;
+    }
+
+    .location-btn:hover {
+      background: #dbeafe;
+    }
+
+    .location-btn.loading {
+      opacity: 0.7;
+      cursor: wait;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group.full {
+      grid-column: span 2;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark-text);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+    }
+
+    /* Address Type Selector */
+    .type-selector {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .type-option {
+      cursor: pointer;
+    }
+
+    .type-option input {
+      display: none;
+    }
+
+    .type-pill {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--medium-text);
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .type-option input:checked + .type-pill {
+      background: var(--primary-blue);
+      color: white;
+      border-color: var(--primary-blue);
+    }
+
+    .save-actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    /* Order Summary */
+    .summary-sticky {
+      position: sticky;
+      top: 100px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: var(--medium-text);
+    }
+
+    .summary-row.total {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--dark-text);
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+
+    .place-order-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--primary-blue);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: all 0.3s;
+    }
+
+    .place-order-btn:hover {
+      background: #3a59ad;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 105, 189, 0.3);
+    }
+
+    /* Payment Options */
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .payment-option:hover {
+      background: #f8f9fa;
+    }
+
+    .payment-option input {
+      accent-color: var(--primary-blue);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .summary-sticky {
+        position: static;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-group.full {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-content">
+      <a href="cart.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Cart
+      </a>
+      <div style="margin-left: auto; font-weight: 600;">Secure Checkout</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="checkout-details">
+      
+      <div class="section-card">
+        <div class="section-title">
+          <span>1. Delivery Address</span>
+        </div>
+
+        <div class="saved-addresses" id="savedAddressesContainer">
+          </div>
+
+        <button class="new-address-btn" onclick="openAddressForm()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Add a new address
+        </button>
+
+        <div class="address-form" id="newAddressForm">
+          <h4 style="margin-bottom: 16px; font-size: 16px;" id="formTitle">Add New Address</h4>
+          
+          <button class="location-btn" onclick="detectLocation()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.01 8.01 0 0 1-8 8z"/><path d="M12 8a4 4 0 1 0 4 4 4.01 4.01 0 0 0-4-4z"/></svg>
+            Use My Current Location
+          </button>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="addrName" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-input" id="addrPhone" placeholder="10-digit mobile number">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Address (House No, Building, Street)</label>
+              <input type="text" class="form-input" id="addrStreet" placeholder="e.g. 123 Main St">
+            </div>
+            <div class="form-group">
+              <label class="form-label">City</label>
+              <input type="text" class="form-input" id="addrCity" placeholder="City">
+            </div>
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <input type="text" class="form-input" id="addrState" placeholder="State">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pincode</label>
+              <input type="text" class="form-input" id="addrZip" placeholder="000000">
+            </div>
+            
+            <div class="form-group full">
+              <label class="form-label">Save Address As</label>
+              <div class="type-selector">
+                <label class="type-option">
+                  <input type="radio" name="addrType" value="HOME" checked>
+                  <span class="type-pill">Home</span>
+                </label>
+                <label class="type-option">
+                  <input type="radio" name="addrType" value="WORK">
+                  <span class="type-pill">Work</span>
+                </label>
+                <label class="type-option">
+                  <input type="radio" name="addrType" value="NEIGHBOUR">
+                  <span class="type-pill">Neighbour</span>
+                </label>
+                <label class="type-option">
+                  <input type="radio" name="addrType" value="OTHER">
+                  <span class="type-pill">Other</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; margin-top: 8px;">
+            <input type="checkbox" id="saveAddressCheck" checked>
+            Save this address for future
+          </label>
+          
+          <div class="save-actions">
+            <button class="new-address-btn" style="background: var(--primary-blue); color: white; padding: 12px 24px; border-radius: 6px; margin: 0;" onclick="saveAndUseAddress()" id="saveBtn">Save & Deliver Here</button>
+            <button class="new-address-btn" style="color: var(--medium-text); margin: 0;" onclick="closeAddressForm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">2. Payment Method</div>
+        
+        <label class="payment-option">
+          <input type="radio" name="payment" value="upi" checked>
+          <div>
+            <strong>UPI</strong>
+            <div style="font-size: 13px; color: #666;">Google Pay, PhonePe, Paytm</div>
+          </div>
+        </label>
+
+        <label class="payment-option">
+          <input type="radio" name="payment" value="card">
+          <div>
+            <strong>Credit / Debit Card</strong>
+          </div>
+        </label>
+
+        <label class="payment-option">
+          <input type="radio" name="payment" value="cod">
+          <div>
+            <strong>Cash on Delivery</strong>
+            <div style="font-size: 13px; color: #666;">Pay comfortably at your doorstep</div>
+          </div>
+        </label>
+      </div>
+
+    </div>
+
+    <div class="order-summary-container">
+      <div class="section-card summary-sticky">
+        <div class="section-title">Order Summary</div>
+        
+        <div id="checkoutItemsContainer" style="max-height: 300px; overflow-y: auto; margin-bottom: 16px; padding-right: 8px; border-bottom: 1px solid var(--border);">
+          <!-- Items will be dynamically injected here -->
+        </div>
+
+        <div class="summary-row">
+          <span>Items Total</span>
+          <span id="summaryTotal">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery</span>
+          <span style="color: var(--success);">FREE</span>
+        </div>
+        
+        <div class="summary-row total">
+          <span>Total Payable</span>
+          <span style="color: var(--primary-blue);" id="finalTotal">₹0</span>
+        </div>
+
+        <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
+        
+        <div style="text-align: center; margin-top: 16px; font-size: 12px; color: #888;">
+          Safe and Secure Payments. 100% Authentic Products.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="cart-manager.js"></script>
+  <script>
+    const ADDRESS_STORAGE_KEY = 'refashioned_addresses_v2'; 
+    let editingAddressIndex = -1;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCheckoutPage();
+      loadAddresses();
+    });
+
+    function renderCheckoutPage() {
+      const buyNowData = sessionStorage.getItem('buyNowItem');
+      let items;
+      let total;
+
+      if (buyNowData) {
+        // --- "BUY NOW" FLOW ---
+        // Use the single item from sessionStorage
+        items = JSON.parse(buyNowData);
+        total = calculateTotal(items);
+      } else {
+        // --- REGULAR CART FLOW ---
+        // Use all items from the cartManager
+        if (!window.cartManager) {
+          console.error("Cart Manager not found!");
+          return;
+        }
+        items = window.cartManager.getCart();
+        total = window.cartManager.getTotal();
+      }
+
+      renderItems(items);
+      renderSummary(total);
+    }
+
+    function calculateTotal(items) {
+      if (!items) return 0;
+      return items.reduce((sum, item) => {
+        const price = parseFloat(item.price.replace(/[₹,]/g, ''));
+        return sum + (price * item.quantity);
+      }, 0);
+    }
+
+    function renderItems(items) {
+      const container = document.getElementById('checkoutItemsContainer');
+      if (!container) return;
+
+      if (!items || items.length === 0) {
+        container.innerHTML = '<p style="font-size: 14px; color: var(--medium-text); padding-bottom: 16px;">No items for checkout.</p>';
+        document.querySelector('.place-order-btn').disabled = true;
+        return;
+      }
+
+      container.innerHTML = items.map(item => `
+        <div style="display: flex; gap: 12px; margin-bottom: 16px; font-size: 14px;">
+            <img src="${item.image}" alt="${item.title}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-weight: 600;">${item.title}</div>
+                <div style="color: var(--medium-text); font-size: 12px;">Qty: ${item.quantity} | Size: ${item.size}</div>
+            </div>
+            <div style="font-weight: 600; display: flex; align-items: center;">${item.price}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderSummary(total) {
+      document.getElementById('summaryTotal').textContent = `₹${total.toFixed(2)}`;
+      document.getElementById('finalTotal').textContent = `₹${total.toFixed(2)}`;
+    }
+
+    // --- 2. ADDRESS LOGIC ---
+    
+    function loadAddresses() {
+      let saved = JSON.parse(localStorage.getItem(ADDRESS_STORAGE_KEY)) || [];
+      
+      const container = document.getElementById('savedAddressesContainer');
+      container.innerHTML = '';
+
+      // Always show button, even if empty (since we removed auto-open)
+      document.querySelector('.new-address-btn').style.display = 'flex'; 
+
+      if (saved.length === 0) {
+        return;
+      }
+
+      saved.forEach((addr, index) => {
+        const el = document.createElement('div');
+        // Only First Item gets "selected" class (Blue border)
+        el.className = `address-card ${index === 0 ? 'selected' : ''}`;
+        
+        // Only select if clicking the card body, not the buttons
+        el.onclick = (e) => {
+            if(!e.target.closest('.action-btn')) selectAddress(index);
+        };
+
+        el.innerHTML = `
+          <input type="radio" name="address" class="address-radio" ${index === 0 ? 'checked' : ''}>
+          <div class="address-content">
+            <div class="address-header">
+              <div style="display: flex; align-items: center;">
+                <h4>${addr.name}</h4>
+                <span class="address-type-tag">${addr.type || 'HOME'}</span>
+              </div>
+              <div class="address-actions">
+                <button class="action-btn edit-btn" onclick="editAddress(${index})">EDIT</button>
+                <button class="action-btn delete-btn" onclick="deleteAddress(${index})" title="Delete Address">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+              </div>
+            </div>
+            <p class="address-text">${addr.text}</p>
+            <p class="address-text"><strong>Phone:</strong> ${addr.phone}</p>
+          </div>
+        `;
+        container.appendChild(el);
+      });
+    }
+
+    function selectAddress(index) {
+      document.querySelectorAll('.address-card').forEach((card, i) => {
+        const radio = card.querySelector('input[type="radio"]');
+        if (i === index) {
+          card.classList.add('selected');
+          radio.checked = true;
+        } else {
+          card.classList.remove('selected');
+          radio.checked = false;
+        }
+      });
+    }
+
+    // Open form for NEW address
+    function openAddressForm() {
+      editingAddressIndex = -1; // Reset to create mode
+      document.getElementById('newAddressForm').classList.add('active');
+      document.querySelector('.new-address-btn').style.display = 'none';
+      document.getElementById('formTitle').textContent = "Add New Address";
+      document.getElementById('saveBtn').textContent = "Save & Deliver Here";
+      clearForm();
+    }
+
+    // Open form for EDITING existing address
+    function editAddress(index) {
+        editingAddressIndex = index;
+        const list = JSON.parse(localStorage.getItem(ADDRESS_STORAGE_KEY));
+        const addr = list[index];
+
+        // Pre-fill form
+        document.getElementById('addrName').value = addr.name;
+        document.getElementById('addrPhone').value = addr.phone;
+        
+        const parts = addr.text.split(', ');
+        if(parts.length >= 2) {
+            document.getElementById('addrStreet').value = parts[0];
+            if(addr.details) {
+                document.getElementById('addrCity').value = addr.details.city;
+                document.getElementById('addrState').value = addr.details.state;
+                document.getElementById('addrZip').value = addr.details.zip;
+                document.getElementById('addrStreet').value = addr.details.street;
+            }
+        }
+
+        // Set Type
+        const radios = document.getElementsByName('addrType');
+        radios.forEach(r => {
+            if(r.value === addr.type) r.checked = true;
+        });
+
+        document.getElementById('newAddressForm').classList.add('active');
+        document.querySelector('.new-address-btn').style.display = 'none';
+        document.getElementById('formTitle').textContent = "Edit Address";
+        document.getElementById('saveBtn').textContent = "Update Address";
+    }
+
+    // NEW: Delete Address Function
+    function deleteAddress(index) {
+        if(confirm("Are you sure you want to delete this address?")) {
+            let addresses = JSON.parse(localStorage.getItem(ADDRESS_STORAGE_KEY)) || [];
+            addresses.splice(index, 1);
+            localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(addresses));
+            loadAddresses();
+        }
+    }
+
+    function closeAddressForm() {
+      document.getElementById('newAddressForm').classList.remove('active');
+      document.querySelector('.new-address-btn').style.display = 'flex';
+    }
+
+    function clearForm() {
+      document.getElementById('addrName').value = '';
+      document.getElementById('addrPhone').value = '';
+      document.getElementById('addrStreet').value = '';
+      document.getElementById('addrCity').value = '';
+      document.getElementById('addrState').value = '';
+      document.getElementById('addrZip').value = '';
+      document.getElementsByName('addrType')[0].checked = true; // Default Home
+    }
+
+    // --- 3. REAL GEO-LOCATION LOGIC ---
+    function detectLocation() {
+      const btn = document.querySelector('.location-btn');
+      const originalText = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10.01 10.01 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.01 8.01 0 0 1-8 8z"/><path d="M12 8a4 4 0 1 0 4 4 4.01 4.01 0 0 0-4-4z"/></svg>
+        Use My Current Location
+      `;
+      
+      if (!("geolocation" in navigator)) {
+        alert("Geolocation is not supported.");
+        return;
+      }
+
+      btn.innerHTML = 'Fetching GPS...';
+      btn.classList.add('loading');
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          
+          btn.innerHTML = 'Fetching Address...';
+
+          try {
+            // Using OpenStreetMap Nominatim API
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`, {
+                headers: { 'User-Agent': 'RefashionedApp/1.0' }
+            });
+            const data = await response.json();
+            
+            if (data && data.address) {
+              const addr = data.address;
+              document.getElementById('addrCity').value = addr.city || addr.town || addr.village || addr.county || '';
+              document.getElementById('addrState').value = addr.state || '';
+              document.getElementById('addrZip').value = addr.postcode || '';
+              
+              const streetParts = [addr.house_number, addr.road, addr.suburb].filter(Boolean);
+              document.getElementById('addrStreet').value = streetParts.join(', ');
+
+              // SUCCESS STATE
+              btn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: green;"><polyline points="20 6 9 17 4 12"/></svg>
+                Location Detected!
+              `;
+              btn.style.background = '#dcfce7';
+              btn.style.color = '#166534';
+              btn.style.border = '1px solid #166534';
+
+              // REVERT BUTTON AFTER 2 SECONDS
+              setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = ''; // reset to css
+                btn.style.color = '';
+                btn.style.border = '';
+              }, 2000);
+            }
+          } catch (error) {
+            alert("Could not fetch address details automatically.");
+            btn.innerHTML = originalText;
+          } finally {
+            btn.classList.remove('loading');
+          }
+        },
+        (error) => {
+          alert("Location access denied or unavailable.");
+          btn.innerHTML = originalText;
+          btn.classList.remove('loading');
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    // --- 4. SAVE ADDRESS LOGIC (Create & Update) ---
+    function saveAndUseAddress() {
+      const name = document.getElementById('addrName').value;
+      const phone = document.getElementById('addrPhone').value;
+      const street = document.getElementById('addrStreet').value;
+      const city = document.getElementById('addrCity').value;
+      const state = document.getElementById('addrState').value;
+      const zip = document.getElementById('addrZip').value;
+      const save = document.getElementById('saveAddressCheck').checked;
+      
+      // Get selected type
+      let type = "HOME";
+      document.getElementsByName('addrType').forEach(r => {
+          if(r.checked) type = r.value;
+      });
+
+      if(!name || !phone || !street || !zip) {
+        alert("Please fill all required fields");
+        return;
+      }
+
+      const addressData = {
+        id: Date.now(),
+        name: name,
+        type: type,
+        text: `${street}, ${city}, ${state} - ${zip}`,
+        phone: phone,
+        details: { street, city, state, zip } // Store raw for editing
+      };
+
+      let addresses = JSON.parse(localStorage.getItem(ADDRESS_STORAGE_KEY)) || [];
+
+      if (save) {
+        if (editingAddressIndex >= 0) {
+            // UPDATE existing
+            addresses[editingAddressIndex] = addressData;
+        } else {
+            // CREATE new (add to top)
+            addresses.unshift(addressData);
+        }
+        localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(addresses));
+      }
+
+      loadAddresses();
+      document.getElementById('newAddressForm').classList.remove('active');
+      document.querySelector('.new-address-btn').style.display = 'flex';
+    }
+
+    function placeOrder() {
+      const saved = JSON.parse(localStorage.getItem(ADDRESS_STORAGE_KEY)) || [];
+      if(saved.length === 0) {
+          alert("Please add a delivery address.");
+          return;
+      }
+
+      alert("Order Placed Successfully!");
+
+      // Check if it was a 'Buy Now' flow and clear appropriate storage
+      if (sessionStorage.getItem('buyNowItem')) {
+        sessionStorage.removeItem('buyNowItem');
+      } else if (window.cartManager) {
+        window.cartManager.clearCart();
+      }
+
+      window.location.href = 'refashioned.html';
+    }
+  </script>
+</body>
+</html>

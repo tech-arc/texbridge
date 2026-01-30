@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nylon Zip Jacket - Refashioned Clothes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="prodetail1.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <button class="back-btn" onclick="history.back()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+        Back to Shop
+      </button>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="window.location.href='cart.html'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"/>
+            <circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+          </svg>
+          <span class="badge cart-badge" id="cartBadge">0</span>
+        </button>
+        <button class="icon-btn" onclick="window.location.href='wishlist.html'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+          </svg>
+          <span class="badge" id="wishlistBadge" style="display: none;">0</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="product-layout" data-product-id="prod2">
+      <div class="image-gallery">
+        <div class="main-image" id="mainImage">
+          <img src="https://i.pinimg.com/1200x/a9/0e/30/a90e30389a8479abdd575bc792dda1ab.jpg" alt="Patchwork Jeans" id="mainImg">
+          <!-- <div class="sale-badge">20% OFF</div> -->
+          <button class="wishlist-toggle" id="wishlistBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+            </svg>
+          </button>
+        </div>
+        <!-- <div class="thumbnail-strip">
+          <div class="thumbnail active" onclick="changeImage('https://images.asket.com/pim-images/1755181789-asket_zjt-ma-dkn_thumbnail.jpg?auto=format&q=80&w=1024', this)">
+            <img src="https://images.asket.com/pim-images/1755181789-asket_zjt-ma-dkn_thumbnail.jpg?auto=format&q=80&w=1024" alt="View 1">
+          </div>
+          <div class="thumbnail" onclick="changeImage('https://images.asket.com/pim-images/1755181787-asket_zjt-ma-dkn_slideshow_2.jpg?auto=format&q=80&w=1024', this)">
+            <img src="https://images.asket.com/pim-images/1755181787-asket_zjt-ma-dkn_slideshow_2.jpg?auto=format&q=80&w=1024" alt="View 2">
+          </div>
+          <div class="thumbnail" onclick="changeImage('https://images.asket.com/pim-images/1755181787-asket_zjt-ma-dkn_slideshow_3.jpg?auto=format&q=80&w=1024', this)">
+            <img src="https://images.asket.com/pim-images/1755181787-asket_zjt-ma-dkn_slideshow_3.jpg?auto=format&q=80&w=1024" alt="View 3">
+          </div>
+          <div class="thumbnail" onclick="changeImage('https://images.asket.com/pim-images/1755181785-asket_zjt-ma-dkn_slideshow_1.jpg?auto=format&q=80&w=1024', this)">
+            <img src="https://images.asket.com/pim-images/1755181785-asket_zjt-ma-dkn_slideshow_1.jpg?auto=format&q=80&w=1024" alt="View 4">
+          </div>
+        </div> -->
+      </div>
+
+      <div class="product-info">
+        <div class="breadcrumb">
+          <a href="refashioned.html">Home</a>
+          <span>/</span>
+          <a href="refashioned.html">Refashioned</a>
+          <span>/</span>
+          <span>Blue Denim Scraps</span>
+        </div>
+
+        <div class="brand-tag">PeopleFashion</div>
+
+        <h1 class="product-title">Blue Denim Scraps</h1>
+        <p class="product-subtitle">Expertly prepaired Blue Denim Scraps by recycled denim. Perfect for fall layering with a sustainable story to tell.</p>
+
+        <div class="rating-section">
+          <div class="stars">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <span class="rating-text">4.0 (128 reviews)</span>
+        </div>
+
+        <div class="price-section">
+          <div class="price-row">
+            <span class="current-price">&#8377;600</span>
+            <!-- <span class="original-price">&#8377;1500</span>
+            <span class="savings">Save &#8377;300</span> -->
+          </div>
+          <div class="discount-info">
+            💚 Earn an extra 10% discount by donating quality clothes
+          </div>
+        </div>
+
+        <!-- <div class="selection-group">
+          <label class="selection-label">Select Size</label>
+          <div class="size-options">
+            <div class="size-option" data-size="XS">XS</div>
+            <div class="size-option unavailable" data-size="S">S</div>
+            <div class="size-option selected" data-size="M">M</div>
+            <div class="size-option" data-size="L">L</div>
+            <div class="size-option" data-size="XL">XL</div>
+          </div>
+        </div> -->
+
+        <div class="selection-group">
+          <label class="selection-label">Quantity</label>
+          <div class="quantity-selector">
+            <button class="qty-btn">−</button>
+            <span class="qty-display" id="qty">1</span>
+            <button class="qty-btn">+</button>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+            </svg>
+            Add to Cart
+          </button>
+          <button class="btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+              <line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+            Buy Now
+          </button>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <span class="feature-text">Quality Verified</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+            <span class="feature-text">Fast Delivery</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+            <span class="feature-text">Easy Returns</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <span class="feature-text">Sustainable Choice</span>
+          </div>
+        </div>
+
+        <div class="details-accordion">
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span>Product Details</span>
+              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="accordion-content">
+              <p>This garment features a bold, multi-tonal patchwork design, expertly constructed from varying shades of vintage indigo denim to create a rugged, deconstructed look with a modern streetwear edge.</p>
+              <ul style="margin: 12px 0 12px 20px;">
+                <li>Material: Heavyweight Upcycled Cotton Denim</li>
+                <li>Design: High-contrast geometric paneling with raw, frayed seams</li>
+                <li>Sustainability: Eco-conscious construction using repurposed textile waste</li>
+              </ul>
+            </div>
+          </div>
+           <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span>Condition & Care</span>
+              <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <div class="accordion-content">
+              <p><strong>Condition:</strong> Excellent - professionally refashioned with minimal wear</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="trust-signals">
+          <div class="trust-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>Authenticity Guaranteed</span></div>
+          <div class="trust-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span>Secure Checkout</span></div>
+          <div class="trust-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Carbon Neutral Shipping</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="related-section">
+      <h2 class="section-title">You May Also Like</h2>
+      <div class="related-grid">
+        <div class="related-card">
+          <div class="related-image"><img src="Images/summer.jpg" alt="Summer Dress"></div>
+          <div class="related-info">
+            <h3 class="related-title">Summer Dress</h3>
+            <div class="related-price"><span class="related-sale">&#8377;400</span><span class="related-original">&#8377;600</span></div>
+          </div>
+        </div>
+        <div class="related-card">
+          <div class="related-image"><img src="Images/winter.jpg" alt="Winter Coat"></div>
+          <div class="related-info">
+            <h3 class="related-title">Winter Coat</h3>
+            <div class="related-price"><span class="related-sale">&#8377;700</span><span class="related-original">&#8377;1000</span></div>
+          </div>
+        </div>
+        <div class="related-card">
+          <div class="related-image"><img src="Images/sneakers.jpg" alt="Sneakers"></div>
+          <div class="related-info">
+            <h3 class="related-title">Sneakers</h3>
+            <div class="related-price"><span class="related-sale">&#8377;1100</span><span class="related-original">&#8377;900</span></div>
+          </div>
+        </div>
+        <div class="related-card">
+          <div class="related-image"><img src="Images/denim.jpg" alt="Denim Shirt"></div>
+          <div class="related-info">
+            <h3 class="related-title">Denim Shirt</h3>
+            <div class="related-price"><span class="related-sale">&#8377;400</span><span class="related-original">&#8377;500</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reviews-section">
+      <div class="reviews-header">
+        <div>
+          <h2 class="section-title" style="text-align: left; margin-bottom: 8px;">Customer Reviews</h2>
+          <div class="reviews-summary">
+            <div class="overall-rating">
+              <span class="rating-number">4.0</span>
+              <div class="rating-stars-large">
+                <div class="stars">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+              </div>
+              <span class="reviews-count">Based on 128 reviews</span>
+            </div>
+            <div class="rating-breakdown">
+              <div class="rating-bar-row">
+                <span class="bar-label">5 ★</span>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" style="width: 65%"></div>
+                </div>
+                <span class="bar-count">83</span>
+              </div>
+              <div class="rating-bar-row">
+                <span class="bar-label">4 ★</span>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" style="width: 20%"></div>
+                </div>
+                <span class="bar-count">26</span>
+              </div>
+              <div class="rating-bar-row">
+                <span class="bar-label">3 ★</span>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" style="width: 10%"></div>
+                </div>
+                <span class="bar-count">13</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn-write-review" onclick="openReviewModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Write a Review
+        </button>
+      </div>
+
+      <div class="reviews-filter">
+        <button class="filter-btn active" onclick="filterReviews('all')">All Reviews</button>
+        <button class="filter-btn" onclick="filterReviews(5)">5 Stars</button>
+        <button class="filter-btn" onclick="filterReviews(4)">4 Stars</button>
+        <button class="filter-btn" onclick="filterReviews(3)">3 Stars</button>
+        
+        <select class="sort-select" onchange="sortReviews(this.value)">
+          <option value="recent">Most Recent</option>
+          <option value="helpful">Most Helpful</option>
+          <option value="high">Highest Rated</option>
+          <option value="low">Lowest Rated</option>
+        </select>
+      </div>
+
+      <div class="reviews-list" id="reviewsList">
+        
+        <div class="review-card" data-rating="5" data-timestamp="1709251200000" data-helpful="24">
+          <div class="review-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">SK</div>
+              <div>
+                <div class="reviewer-name">Sarah K.</div>
+                <div class="review-meta">
+                  <div class="stars">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                  <span class="review-date">2 weeks ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="verified-badge">Verified Purchase</div>
+          </div>
+          <h4 class="review-title">Perfect fall jacket!</h4>
+          <p class="review-text">Absolutely love this jacket! The quality is amazing...</p>
+          <div class="review-footer">
+            <button class="helpful-btn" onclick="toggleHelpful(this)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+              Helpful (24)
+            </button>
+          </div>
+        </div>
+
+        <div class="review-card" data-rating="5" data-timestamp="1708646400000" data-helpful="18">
+            <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-avatar">MR</div>
+                  <div>
+                    <div class="reviewer-name">Mike R.</div>
+                    <div class="review-meta">
+                      <div class="stars">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      </div>
+                      <span class="review-date">3 weeks ago</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="verified-badge">Verified Purchase</div>
+              </div>
+              <h4 class="review-title">Great quality and price!</h4>
+              <p class="review-text">Was skeptical about buying refashioned clothes online, but this exceeded my expectations.</p>
+              <div class="review-footer">
+                <button class="helpful-btn" onclick="toggleHelpful(this)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+                  Helpful (18)
+                </button>
+              </div>
+        </div>
+
+        <div class="review-card" data-rating="4" data-timestamp="1706668800000" data-helpful="31" style="display: none;">
+            <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-avatar">EL</div>
+                  <div>
+                    <div class="reviewer-name">Emma L.</div>
+                    <div class="review-meta">
+                      <div class="stars">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" opacity="0.3"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      </div>
+                      <span class="review-date">1 month ago</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="verified-badge">Verified Purchase</div>
+              </div>
+              <h4 class="review-title">Nice jacket, slightly oversized</h4>
+              <p class="review-text">Love the style and the sustainable aspect. The jacket is in great condition.</p>
+              <div class="review-footer">
+                <button class="helpful-btn" onclick="toggleHelpful(this)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+                  Helpful (31)
+                </button>
+              </div>
+        </div>
+
+        <div class="review-card" data-rating="5" data-timestamp="1706668800000" data-helpful="42" style="display: none;">
+            <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-avatar">JD</div>
+                  <div>
+                    <div class="reviewer-name">Jessica D.</div>
+                    <div class="review-meta">
+                      <div class="stars">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                      </div>
+                      <span class="review-date">1 month ago</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="verified-badge">Verified Purchase</div>
+              </div>
+              <h4 class="review-title">Obsessed with sustainable fashion now!</h4>
+              <p class="review-text">This was my first refashioned purchase and I'm hooked!</p>
+              <div class="review-footer">
+                <button class="helpful-btn" onclick="toggleHelpful(this)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+                  Helpful (42)
+                </button>
+              </div>
+        </div>
+
+      </div>
+
+      <div class="load-more-reviews">
+        <button class="btn-load-more" id="loadMoreBtn" onclick="loadMoreReviews()">Load More Reviews</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="reviewModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Write a Review</h3>
+        <button class="close-modal" onclick="closeReviewModal()">×</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rating</label>
+        <div class="star-rating-input" id="starRating">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" onclick="setRating(1)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" onclick="setRating(2)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" onclick="setRating(3)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" onclick="setRating(4)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" onclick="setRating(5)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Review Title</label>
+        <input type="text" class="form-input" id="reviewTitle" placeholder="Summarize your thoughts">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Review</label>
+        <textarea class="form-textarea" id="reviewBody" placeholder="What did you like or dislike?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Add Photos/Video</label>
+        <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+          <p>Click to upload photos or videos</p>
+          <input type="file" id="fileInput" hidden accept="image/*,video/*" multiple onchange="handleFileUpload(this)">
+        </div>
+        <div id="filePreview" style="display: flex; gap: 8px; margin-top: 10px;"></div>
+      </div>
+      <button class="btn-primary" style="width: 100%" onclick="submitReview()">Submit Review</button>
+    </div>
+  </div>
+
+  <!-- Cart Manager Script - MUST BE FIRST -->
+  <script src="cart-manager.js"></script>
+  <script src="wishlist-manager.js"></script>
+
+  <!-- This script handles adding to cart, quantity, size selection, and buy now -->
+  <script src="prodetail-logic.js"></script>
+
+  <script>
+    // ==========================================
+    // EXISTING PAGE FUNCTIONALITY
+    // ==========================================
+
+    // Image gallery
+    function changeImage(src, element) {
+      document.getElementById('mainImg').src = src;
+      document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    // Wishlist toggle
+    document.getElementById('wishlistBtn').addEventListener('click', function() {
+      this.classList.toggle('active');
+    });
+
+    // Accordion
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      const wasActive = item.classList.contains('active');
+      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+      if (!wasActive) item.classList.add('active');
+    }
+
+    // --- LOAD MORE REVIEWS ---
+    let reviewsVisible = 2;
+    function loadMoreReviews() {
+        const reviews = document.querySelectorAll('.review-card');
+        let count = 0;
+        
+        reviews.forEach(review => {
+            if (review.style.display === 'none' && count < 2) {
+                review.style.display = 'block';
+                review.style.opacity = 0;
+                review.style.transform = "translateY(20px)";
+                setTimeout(() => {
+                    review.style.opacity = 1;
+                    review.style.transform = "translateY(0)";
+                }, 50);
+                count++;
+            }
+        });
+
+        const hiddenReviews = Array.from(document.querySelectorAll('.review-card')).filter(r => r.style.display === 'none');
+        if (hiddenReviews.length === 0) {
+            document.getElementById('loadMoreBtn').style.display = 'none';
+        }
+    }
+
+    // --- HELPFUL BUTTON LOGIC ---
+    function toggleHelpful(btn) {
+        if(btn.classList.contains('active')) return;
+
+        const text = btn.innerText.trim();
+        const match = text.match(/\d+/);
+        let count = match ? parseInt(match[0]) : 0;
+        
+        count++;
+        
+        btn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+                <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
+            </svg>
+            Helpful (${count})
+        `;
+        btn.classList.add('active');
+        btn.style.color = 'var(--primary-blue)';
+        btn.style.background = 'var(--light-blue)';
+    }
+
+    // --- SORTING LOGIC ---
+    function sortReviews(criteria) {
+        const container = document.getElementById('reviewsList');
+        const reviews = Array.from(container.getElementsByClassName('review-card'));
+
+        reviews.sort((a, b) => {
+            if (criteria === 'recent') {
+                return b.dataset.timestamp - a.dataset.timestamp;
+            } else if (criteria === 'high') {
+                return b.dataset.rating - a.dataset.rating;
+            } else if (criteria === 'low') {
+                return a.dataset.rating - b.dataset.rating;
+            } else if (criteria === 'helpful') {
+                return b.dataset.helpful - a.dataset.helpful;
+            }
+        });
+
+        reviews.forEach(review => container.appendChild(review));
+    }
+
+    // --- WRITE REVIEW MODAL LOGIC ---
+    let currentRating = 0;
+    let uploadedFiles = [];
+
+    function openReviewModal() {
+        document.getElementById('reviewModal').classList.add('active');
+    }
+
+    function closeReviewModal() {
+        document.getElementById('reviewModal').classList.remove('active');
+    }
+
+    function setRating(rating) {
+        currentRating = rating;
+        const stars = document.querySelectorAll('#starRating svg');
+        stars.forEach((star, index) => {
+            if(index < rating) {
+                star.style.color = 'var(--warning)';
+                star.style.fill = 'currentColor';
+            } else {
+                star.style.color = '#ddd';
+                star.style.fill = 'currentColor';
+            }
+        });
+    }
+
+    function handleFileUpload(input) {
+        const previewContainer = document.getElementById('filePreview');
+        previewContainer.innerHTML = '';
+        uploadedFiles = Array.from(input.files);
+
+        uploadedFiles.forEach(file => {
+            const url = URL.createObjectURL(file);
+            const img = document.createElement('img');
+            img.src = url;
+            img.style.width = '60px';
+            img.style.height = '60px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '4px';
+            previewContainer.appendChild(img);
+        });
+    }
+
+    function submitReview() {
+        const title = document.getElementById('reviewTitle').value;
+        const body = document.getElementById('reviewBody').value;
+
+        if(!currentRating || !title || !body) {
+            alert("Please fill in all fields and select a rating.");
+            return;
+        }
+
+        const timestamp = Date.now();
+        const starHTML = Array(5).fill(0).map((_, i) => 
+            `<svg width="14" height="14" viewBox="0 0 24 24" fill="${i < currentRating ? 'currentColor' : 'none'}" stroke="currentColor" style="color: ${i < currentRating ? 'var(--warning)' : 'currentColor'}">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+             </svg>`
+        ).join('');
+
+        let imagesHTML = '';
+        if(uploadedFiles.length > 0) {
+            imagesHTML = `<div class="review-images">
+                ${uploadedFiles.map(file => `<div class="review-image-item"><img src="${URL.createObjectURL(file)}"></div>`).join('')}
+            </div>`;
+        }
+
+        const reviewHTML = `
+            <div class="review-card" data-rating="${currentRating}" data-timestamp="${timestamp}" data-helpful="0">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">ME</div>
+                        <div>
+                            <div class="reviewer-name">You (Just Now)</div>
+                            <div class="review-meta">
+                                <div class="stars">${starHTML}</div>
+                                <span class="review-date">Just Now</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="verified-badge">Verified User</div>
+                </div>
+                <h4 class="review-title">${title}</h4>
+                <p class="review-text">${body}</p>
+                ${imagesHTML}
+                <div class="review-footer">
+                    <button class="helpful-btn" onclick="toggleHelpful(this)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+                        Helpful (0)
+                    </button>
+                </div>
+            </div>
+        `;
+
+        const list = document.getElementById('reviewsList');
+        list.insertAdjacentHTML('afterbegin', reviewHTML);
+
+        closeReviewModal();
+        document.getElementById('reviewTitle').value = '';
+        document.getElementById('reviewBody').value = '';
+        document.getElementById('fileInput').value = '';
+        document.getElementById('filePreview').innerHTML = '';
+        setRating(0);
+        
+        alert("Review Submitted Successfully!");
+    }
+
+    // Filter reviews (Stars)
+    function filterReviews(rating) {
+      const reviews = document.querySelectorAll('.review-card');
+      const buttons = document.querySelectorAll('.filter-btn');
+      
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      reviews.forEach(review => {
+        if (rating === 'all') {
+          review.style.display = 'block';
+        } else {
+          const reviewRating = parseInt(review.getAttribute('data-rating'));
+          review.style.display = reviewRating === rating ? 'block' : 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
