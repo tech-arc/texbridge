@@ -388,10 +388,12 @@
                             <div class="field-label">Photos</div>
                             <div class="photos">
                                 ${donation.photos.split(',').map(photo => {
-                                    // Convert file path to proper URL
-                                    const photoUrl = photo.startsWith('http') ? photo : `${API_URL}/${photo}`;
+                                    // Normalize backslashes and leading slashes, then build URL
+                                    const normalized = photo.replace(/\\/g, '/').replace(/^\/+/,'');
+                                    const photoUrl = normalized.startsWith('http') ? normalized : `${API_URL}/${normalized}`;
                                     return `<img class="photo-thumbnail" src="${photoUrl}" alt="Donation photo" onclick="openPhotoModal('${photoUrl}')">`;
-                                }).join('')}
+                                }).join('')
+                                }
                             </div>
                         </div>
                     ` : ''}
