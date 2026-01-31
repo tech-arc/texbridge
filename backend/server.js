@@ -270,8 +270,9 @@ app.post('/api/donations', upload.array('photos', 10), (req, res) => {
         return res.status(400).json({ error: 'At least one photo is required' });
     }
 
-    // Get file paths
-    const photoPaths = req.files.map(file => file.path).join(',');
+    // Store relative public paths for serving via /uploads
+    // Use file.filename so the saved path works with app.use('/uploads', express.static(...))
+    const photoPaths = req.files.map(file => `uploads/donations/${file.filename}`).join(',');
 
     db.run(
         `INSERT INTO donations (userId, quantity, category, condition, description, address, contact, location_lat, location_lon, photos) 
