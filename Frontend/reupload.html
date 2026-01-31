@@ -280,6 +280,8 @@
         <video id="camera-feed" autoplay playsinline></video>
         <canvas id="camera-canvas" style="display:none;"></canvas>
         <div class="camera-controls">
+            <!-- Toggle between front/back camera -->
+            <button id="switch-camera-btn" class="cancel-btn" onclick="switchCamera()">Use Front Camera</button>
             <button class="cancel-btn" onclick="closeCamera()">Cancel</button>
             <button class="snap-btn" onclick="takeSnapshot()">Take Photo</button>
         </div>
@@ -369,34 +371,103 @@
         });
 
         // --- 2. CAMERA LOGIC ---
-        cameraBox.addEventListener('click', async () => {
+        let currentFacingMode = 'environment'; // 'environment' (rear) or 'user' (front)
+
+        async function startCamera() {
             try {
-                videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                // Stop any existing stream
+                if (videoStream) {
+                    videoStream.getTracks().forEach(t => t.stop());
+                }
+
+                const constraints = { video: { facingMode: { ideal: currentFacingMode } }, audio: false };
+                videoStream = await navigator.mediaDevices.getUserMedia(constraints);
                 videoElement.srcObject = videoStream;
                 cameraModal.style.display = 'flex';
+                updateCameraIndicator();
             } catch (err) {
-                alert("Camera access denied. Please use 'Upload from Device'.");
+                // Fallback to generic video if facingMode isn't supported
+                try {
+                    videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    videoElement.srcObject = videoStream;
+                    cameraModal.style.display = 'flex';
+                    updateCameraIndicator();
+                } catch (err2) {
+                    alert("Camera access denied or not available. Please use 'Upload from Device'.");
+                }
             }
-        });
+        }
+
+        cameraBox.addEventListener('click', startCamera);
+
+        function updateCameraIndicator() {
+            const switchBtn = document.getElementById('switch-camera-btn');
+            if (switchBtn) {
+                switchBtn.textContent = currentFacingMode === 'environment' ? 'Use Front Camera' : 'Use Rear Camera';
+            }
+        }
+
+        async function switchCamera() {
+            currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+            // Restart stream with new facing mode
+            await startCamera();
+        }
 
         function closeCamera() {
             cameraModal.style.display = 'none';
             if (videoStream) {
                 videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+                videoElement.srcObject = null;
             }
         }
 
         function takeSnapshot() {
             const context = canvasElement.getContext('2d');
-            canvasElement.width = videoElement.videoWidth;
-            canvasElement.height = videoElement.videoHeight;
+
+            // Resize to a reasonable max dimension to control file size
+            const maxDim = 1600;
+            let width = videoElement.videoWidth || 1280;
+            let height = videoElement.videoHeight || 720;
+            const scale = Math.min(1, maxDim / Math.max(width, height));
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+
+            canvasElement.width = width;
+            canvasElement.height = height;
             context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
 
-            canvasElement.toBlob((blob) => {
-                const file = new File([blob], `camera_photo_${Date.now()}.jpg`, { type: "image/jpeg" });
+            // Try first with high quality, then progressively compress if file is too large
+            const MAX_SIZE = 10 * 1024 * 1024; // 10MB (server limit)
+
+            function finalizeBlob(blob) {
+                if (!blob) return alert('Failed to capture image. Please try again.');
+                const filename = `camera_${currentFacingMode}_${Date.now()}.jpg`;
+                const file = new File([blob], filename, { type: 'image/jpeg' });
                 addFilesToGallery([file]);
                 closeCamera();
-            }, 'image/jpeg');
+            }
+
+            function tryCompress(quality) {
+                canvasElement.toBlob((b) => {
+                    if (!b) return alert('Failed to capture image.');
+                    if (b.size > MAX_SIZE && quality > 0.4) {
+                        tryCompress(quality - 0.1);
+                    } else {
+                        finalizeBlob(b);
+                    }
+                }, 'image/jpeg', quality);
+            }
+
+            // Start with near-max quality
+            canvasElement.toBlob((blob) => {
+                if (!blob) return alert('Failed to capture image.');
+                if (blob.size > MAX_SIZE) {
+                    tryCompress(0.8);
+                } else {
+                    finalizeBlob(blob);
+                }
+            }, 'image/jpeg', 0.92);
         }
 
         // --- 3. GALLERY & DELETE LOGIC ---
