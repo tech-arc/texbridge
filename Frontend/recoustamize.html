@@ -147,8 +147,7 @@
             <h2>Submit Your Clothes</h2>
             <p class="form-description">Submit clothes data to complete customization analysis</p>
 
-            <form class="customization-form"
-                onsubmit="event.preventDefault(); alert('Check console for window.allFiles array!'); console.log(window.allFiles);">
+            <form class="customization-form" onsubmit="submitCustomization(event)">
                 <div class="form-group">
                     <label for="material" style="font-weight: bold;">Material Information</label>
                     <input type="text" id="material" placeholder="e.g. 100% Cotton, Polyester Blend..."
@@ -383,6 +382,77 @@
             });
 
             console.log("Current Files for Backend:", window.allFiles);
+        }
+
+        // --- 4. SUBMIT CUSTOMIZATION REQUEST ---
+        const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://texbridge.onrender.com';
+
+        async function submitCustomization(e) {
+            e.preventDefault();
+
+            if (window.allFiles.length === 0) {
+                alert('Please add at least one photo');
+                return;
+            }
+
+            // Ensure user is signed in (follow same flow as donations)
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                alert('Please sign in to submit a customization request');
+                window.location.href = 'reglogin.html';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            const material = document.getElementById('material').value;
+            const description = document.getElementById('description').value;
+
+            const formData = new FormData();
+            formData.append('userId', user.id);
+            formData.append('material', material);
+            formData.append('description', description);
+
+            // Try to read captured coordinates (if location logic saved them)
+            try {
+                const latInput = document.querySelector('.location-input input');
+                const coordsText = latInput ? latInput.value : '';
+                // If coords are like "Lat: xx, Lon: yy" we skip; backend accepts null if unavailable
+            } catch (err) {
+                // ignore
+            }
+
+            window.allFiles.forEach((file, idx) => {
+                formData.append('photos', file, file.name);
+            });
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const res = await fetch(`${API_URL}/api/customizations`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('Customization request submitted successfully!');
+                    window.allFiles = [];
+                    renderGallery();
+                    // Optionally redirect to dashboard
+                    window.location.href = 'customizations-dashboard.html';
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Information';
+                }
+            } catch (err) {
+                alert('Submission failed: ' + err.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Information';
+            }
         }
     </script>
     <script>

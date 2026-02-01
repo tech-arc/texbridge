@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customizations Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { display:flex; justify-content: space-between; align-items:center; margin-bottom: 20px; }
+        h1 { font-size: 28px; }
+        .filter-buttons { display:flex; gap:10px; }
+        button { padding: 8px 14px; border-radius:6px; border: none; cursor:pointer; background:#e0e0e0 }
+        button.active { background: #5470b7; color:white }
+        .stats { display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-bottom:20px }
+        .stat-card { background:white; padding:16px; border-radius:8px; box-shadow: 0 2px 4px rgba(0,0,0,0.06); text-align:center }
+        .stat-number { font-size: 26px; color:#5470b7; font-weight:700 }
+        .customizations-grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap:20px }
+        .card { background:white; padding:16px; border-radius:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08) }
+        .card h3 { color:#5470b7; margin-bottom:8px }
+        .field-label { font-weight:700; font-size:12px; color:#555; text-transform:uppercase }
+        .field-value { margin-top:6px; color:#333 }
+        .photos { display:grid; grid-template-columns: repeat(2,1fr); gap:8px; margin-top:10px }
+        .photo-thumbnail { width:100%; height:90px; object-fit:cover; border-radius:4px; cursor:pointer }
+        .controls { display:flex; gap:8px; align-items:center; margin-top:12px }
+        .select { padding:6px; border-radius:6px; border:1px solid #ddd }
+        .update-btn { padding:6px 10px; background:#5470b7; color:white; border:none; border-radius:6px; cursor:pointer }
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center }
+        .modal.active { display:flex }
+        .modal-content { background:white; padding:20px; border-radius:8px; max-width:90%; max-height:90%; overflow:auto }
+        .modal-close { float:right; font-size:22px; cursor:pointer }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✂️ Customizations Dashboard</h1>
+            <div class="filter-buttons">
+                <button class="active" onclick="filterCustomizations('all')">All</button>
+                <button onclick="filterCustomizations('New')">New</button>
+                <button onclick="filterCustomizations('In-progress')">In-progress</button>
+                <button onclick="filterCustomizations('Completed')">Completed</button>
+                <button onclick="filterCustomizations('recent')">Recent</button>
+            </div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+
+        <div id="error" class="error" style="display:none; color:#c62828; margin-bottom:12px"></div>
+
+        <div class="customizations-grid" id="grid">
+            <div class="loading">Loading...</div>
+        </div>
+    </div>
+
+    <div class="modal" id="photoModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closePhotoModal()">&times;</span>
+            <img id="modalPhoto" src="" alt="Full size" style="max-width:100%; max-height:80vh" />
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://texbridge.onrender.com';
+        let allCustomizations = [];
+
+        document.addEventListener('DOMContentLoaded', loadCustomizations);
+
+        async function loadCustomizations() {
+            try {
+                const res = await fetch(`${API_URL}/api/customizations`);
+                const data = await res.json();
+                if (data.success) {
+                    allCustomizations = data.customizations;
+                    renderStats();
+                    renderGrid(allCustomizations);
+                } else {
+                    showError('Failed to load');
+                }
+            } catch (err) {
+                showError('Error: ' + err.message);
+            }
+        }
+
+        function renderStats() {
+            const total = allCustomizations.length;
+            const byStatus = allCustomizations.reduce((acc, c) => { acc[c.status] = (acc[c.status]||0)+1; return acc }, {});
+            const html = `
+                <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Total Requests</div></div>
+                <div class="stat-card"><div class="stat-number">${byStatus['New']||0}</div><div class="stat-label">New</div></div>
+                <div class="stat-card"><div class="stat-number">${byStatus['In-progress']||0}</div><div class="stat-label">In-progress</div></div>
+                <div class="stat-card"><div class="stat-number">${byStatus['Completed']||0}</div><div class="stat-label">Completed</div></div>
+            `;
+            document.getElementById('stats').innerHTML = html;
+        }
+
+        function renderGrid(items) {
+            const grid = document.getElementById('grid');
+            if (!items || items.length === 0) {
+                grid.innerHTML = '<div style="background:white;padding:20px;border-radius:8px">No requests found</div>';
+                return;
+            }
+
+            grid.innerHTML = items.map(c => `
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center">
+                        <h3>#${c.id}</h3>
+                        <small>${new Date(c.createdAt).toLocaleString()}</small>
+                    </div>
+                    <div class="field-label">Material</div>
+                    <div class="field-value">${c.material}</div>
+
+                    <div class="field-label" style="margin-top:8px">Description</div>
+                    <div class="field-value">${c.description.length>150?c.description.substring(0,150)+'...':c.description}</div>
+
+                    ${c.location_lat && c.location_lon ? `
+                        <div style="margin-top:8px"><a href="https://maps.google.com/?q=${c.location_lat},${c.location_lon}" target="_blank">📍 View on Map</a></div>
+                    ` : ''}
+
+                    ${c.photos ? `
+                        <div class="photos">
+                            ${c.photos.split(',').map(p => {
+                                const normalized = p.replace(/\\/g, '/').replace(/^\/+/, '');
+                                const url = normalized.startsWith('http') ? normalized : `${API_URL}/${normalized}`;
+                                return `<img class="photo-thumbnail" src="${url}" onclick="openPhotoModal('${url}')" />`;
+                            }).join('')}
+                        </div>
+                    ` : ''}
+
+                    <div class="controls">
+                        <select class="select" id="status-${c.id}">
+                            <option ${c.status === 'New' ? 'selected': ''}>New</option>
+                            <option ${c.status === 'In-progress' ? 'selected': ''}>In-progress</option>
+                            <option ${c.status === 'Completed' ? 'selected': ''}>Completed</option>
+                        </select>
+                        <input class="select" id="assigned-${c.id}" placeholder="Assigned to" value="${c.assignedTo||''}" />
+                        <input class="select" id="price-${c.id}" placeholder="Price estimate" value="${c.priceEstimate||''}" />
+                        <button class="update-btn" onclick="updateCustomization(${c.id})">Update</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showError(msg) {
+            const e = document.getElementById('error');
+            e.textContent = msg; e.style.display = 'block';
+            document.getElementById('grid').innerHTML = '';
+        }
+
+        function filterCustomizations(filter) {
+            document.querySelectorAll('.filter-buttons button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            let list = allCustomizations;
+            if (filter === 'recent') list = allCustomizations.slice(0, 10);
+            else if (filter !== 'all') list = allCustomizations.filter(c => c.status === filter);
+            renderGrid(list);
+        }
+
+        function openPhotoModal(url) {
+            document.getElementById('modalPhoto').src = url;
+            document.getElementById('photoModal').classList.add('active');
+        }
+        function closePhotoModal() { document.getElementById('photoModal').classList.remove('active'); }
+
+        // Update customization (requires admin/login)
+        async function updateCustomization(id) {
+            const status = document.getElementById(`status-${id}`).value;
+            const assignedTo = document.getElementById(`assigned-${id}`).value;
+            const priceEstimate = document.getElementById(`price-${id}`).value;
+
+            try {
+                const res = await fetch(`${API_URL}/api/customizations/${id}`, {
+                    method: 'PUT',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status, assignedTo, priceEstimate })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Updated');
+                    loadCustomizations();
+                } else {
+                    alert('Failed: ' + (data.error || 'Unknown'));
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        }
+    </script>
+</body>
+</html>
