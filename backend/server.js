@@ -19,7 +19,13 @@ if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Configure multer for file uploads
+// Create customizations uploads directory
+const customUploadsDir = path.join(__dirname, 'uploads/customizations');
+if (!fs.existsSync(customUploadsDir)) {
+    fs.mkdirSync(customUploadsDir, { recursive: true });
+}
+
+// Configure multer for donations file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadsDir);
@@ -35,6 +41,30 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
     fileFilter: (req, file, cb) => {
         // Only allow image files
+        const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (allowedMimes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed'));
+        }
+    }
+});
+
+// Configure multer for customizations file uploads (separate folder)
+const storageCustomizations = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, customUploadsDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const uploadCustomizations = multer({
+    storage: storageCustomizations,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+    fileFilter: (req, file, cb) => {
         const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (allowedMimes.includes(file.mimetype)) {
             cb(null, true);
@@ -74,6 +104,24 @@ db.run(`CREATE TABLE IF NOT EXISTS donations (
     location_lon REAL,
     photos TEXT,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id)
+)`);
+
+// Create customizations table
+// Tracks clothing customization requests with status, assignment and price fields
+db.run(`CREATE TABLE IF NOT EXISTS customizations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userId INTEGER NOT NULL,
+    material TEXT NOT NULL,
+    description TEXT NOT NULL,
+    location_lat REAL,
+    location_lon REAL,
+    photos TEXT,
+    status TEXT DEFAULT 'New',
+    assignedTo TEXT,
+    priceEstimate REAL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (userId) REFERENCES users(id)
 )`);
 
@@ -328,6 +376,91 @@ app.get('/api/donations/:id', (req, res) => {
         res.json({ success: true, donation: row });
     });
 });
+
+// --------------------- Customizations Endpoints ---------------------
+
+// POST - Submit customization request with photos
+app.post('/api/customizations', uploadCustomizations.array('photos', 10), (req, res) => {
+    const { material, description, location_lat, location_lon, userId } = req.body;
+
+    // Validate required fields
+    if (!userId || !material || !description) {
+        return res.status(400).json({ error: 'userId, material and description are required' });
+    }
+
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ error: 'At least one photo is required' });
+    }
+
+    const photoPaths = req.files.map(file => `uploads/customizations/${file.filename}`).join(',');
+
+    db.run(
+        `INSERT INTO customizations (userId, material, description, location_lat, location_lon, photos) VALUES (?, ?, ?, ?, ?, ?)`,
+        [userId, material, description, location_lat || null, location_lon || null, photoPaths],
+        function(err) {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ error: 'Failed to save customization request' });
+            }
+            res.json({ success: true, message: 'Customization request submitted', customizationId: this.lastID });
+        }
+    );
+});
+
+// GET - Retrieve all customizations (optional user filter)
+app.get('/api/customizations', (req, res) => {
+    const userId = req.query.userId;
+
+    let query = 'SELECT * FROM customizations ORDER BY createdAt DESC';
+    let params = [];
+
+    if (userId) {
+        query = 'SELECT * FROM customizations WHERE userId = ? ORDER BY createdAt DESC';
+        params = [userId];
+    }
+
+    db.all(query, params, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Failed to fetch customizations' });
+        }
+        res.json({ success: true, customizations: rows });
+    });
+});
+
+// GET - Retrieve single customization by ID
+app.get('/api/customizations/:id', (req, res) => {
+    const id = req.params.id;
+
+    db.get('SELECT * FROM customizations WHERE id = ?', [id], (err, row) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Failed to fetch customization' });
+        }
+        if (!row) return res.status(404).json({ error: 'Customization not found' });
+        res.json({ success: true, customization: row });
+    });
+});
+
+// PUT - Update customization status/assignment (protected)
+app.put('/api/customizations/:id', isAuthenticated, (req, res) => {
+    const id = req.params.id;
+    const { status, assignedTo, priceEstimate } = req.body;
+
+    db.run(
+        `UPDATE customizations SET status = ?, assignedTo = ?, priceEstimate = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?`,
+        [status || 'New', assignedTo || null, priceEstimate || null, id],
+        function(err) {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ error: 'Failed to update customization' });
+            }
+            res.json({ success: true, message: 'Customization updated' });
+        }
+    );
+});
+
+// --------------------- End Customizations ---------------------
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
