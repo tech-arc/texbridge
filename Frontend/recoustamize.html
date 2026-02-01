@@ -121,6 +121,7 @@
         <video id="camera-feed" autoplay playsinline></video>
         <canvas id="camera-canvas" style="display:none;"></canvas>
         <div class="camera-controls">
+            <button id="switch-camera-btn" type="button" class="cancel-btn" onclick="switchCamera()">Use Front Camera</button>
             <button type="button" class="cancel-btn" onclick="closeCamera()">Cancel</button>
             <button type="button" class="snap-btn" onclick="takeSnapshot()">Take Photo</button>
         </div>
@@ -273,6 +274,8 @@
         window.allFiles = [];
 
         let videoStream = null;
+        let currentFacingMode = 'environment'; // 'environment' = rear camera, 'user' = front camera
+        let capturedLocation = { lat: null, lon: null }; // will be set when user clicks Get Location
 
         // --- DOM ELEMENTS ---
         const cameraBox = document.getElementById('camera-box');
@@ -298,34 +301,99 @@
         });
 
         // --- 2. TAKE PHOTO LOGIC (Webcam) ---
-        cameraBox.addEventListener('click', async () => {
+        cameraBox.addEventListener('click', () => {
+            startCamera();
+        });
+
+        async function startCamera() {
             try {
-                videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                if (videoStream) {
+                    videoStream.getTracks().forEach(t => t.stop());
+                }
+
+                const constraints = { video: { facingMode: { ideal: currentFacingMode } }, audio: false };
+                videoStream = await navigator.mediaDevices.getUserMedia(constraints);
                 videoElement.srcObject = videoStream;
                 cameraModal.style.display = 'flex';
+                updateCameraIndicator();
             } catch (err) {
-                alert("Camera access denied or not available. Please use 'Upload from Device'.");
+                // Fallback to generic video if facingMode isn't supported
+                try {
+                    videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    videoElement.srcObject = videoStream;
+                    cameraModal.style.display = 'flex';
+                    updateCameraIndicator();
+                } catch (err2) {
+                    alert("Camera access denied or not available. Please use 'Upload from Device'.");
+                }
             }
-        });
+        }
+
+        function switchCamera() {
+            currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+            startCamera();
+        }
+
+        function updateCameraIndicator() {
+            const switchBtn = document.getElementById('switch-camera-btn');
+            if (switchBtn) {
+                switchBtn.textContent = currentFacingMode === 'environment' ? 'Use Front Camera' : 'Use Rear Camera';
+            }
+        }
 
         function closeCamera() {
             cameraModal.style.display = 'none';
             if (videoStream) {
                 videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+                videoElement.srcObject = null;
             }
         }
 
         function takeSnapshot() {
             const context = canvasElement.getContext('2d');
-            canvasElement.width = videoElement.videoWidth;
-            canvasElement.height = videoElement.videoHeight;
+
+            // Resize to a reasonable max dimension to control file size
+            const maxDim = 1600;
+            let width = videoElement.videoWidth || 1280;
+            let height = videoElement.videoHeight || 720;
+            const scale = Math.min(1, maxDim / Math.max(width, height));
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+
+            canvasElement.width = width;
+            canvasElement.height = height;
             context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
 
-            canvasElement.toBlob((blob) => {
-                const file = new File([blob], `camera_photo_${Date.now()}.jpg`, { type: "image/jpeg" });
+            const MAX_SIZE = 10 * 1024 * 1024; // 10MB (server limit)
+
+            function finalizeBlob(blob) {
+                if (!blob) return alert('Failed to capture image. Please try again.');
+                const file = new File([blob], `camera_photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
                 addFilesToGallery([file]);
                 closeCamera();
-            }, 'image/jpeg');
+            }
+
+            function tryCompress(quality) {
+                canvasElement.toBlob((b) => {
+                    if (!b) return alert('Failed to capture image.');
+                    if (b.size > MAX_SIZE && quality > 0.4) {
+                        tryCompress(quality - 0.1);
+                    } else {
+                        finalizeBlob(b);
+                    }
+                }, 'image/jpeg', quality);
+            }
+
+            // Start with near-max quality
+            canvasElement.toBlob((blob) => {
+                if (!blob) return alert('Failed to capture image.');
+                if (blob.size > MAX_SIZE) {
+                    tryCompress(0.8);
+                } else {
+                    finalizeBlob(blob);
+                }
+            }, 'image/jpeg', 0.92);
         }
 
         // --- 3. GALLERY MANAGEMENT ---
@@ -425,6 +493,13 @@
                 formData.append('photos', file, file.name);
             });
 
+            // Include coordinates (if available)
+            formData.append('location_lat', capturedLocation.lat);
+            formData.append('location_lon', capturedLocation.lon);
+
+            // Debug: log FormData entries
+            for (let pair of formData.entries()) { console.log('formData:', pair[0], pair[1]); }
+
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
 
@@ -473,8 +548,9 @@
                         async (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-
-                            // Option A: Just show coordinates (Simple)
+                // Save coordinates for the submit step
+                capturedLocation.lat = lat;
+                capturedLocation.lon = lon;
                             // locationInput.value = `Lat: ${lat}, Lon: ${lon}`;
 
                             // Option B: Get real address using free OpenStreetMap API (Better)
