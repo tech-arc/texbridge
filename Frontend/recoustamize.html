@@ -121,6 +121,7 @@
         <video id="camera-feed" autoplay playsinline></video>
         <canvas id="camera-canvas" style="display:none;"></canvas>
         <div class="camera-controls">
+            <button id="switch-camera-btn" type="button" class="cancel-btn" onclick="switchCamera()">Use Front Camera</button>
             <button type="button" class="cancel-btn" onclick="closeCamera()">Cancel</button>
             <button type="button" class="snap-btn" onclick="takeSnapshot()">Take Photo</button>
         </div>
@@ -147,8 +148,7 @@
             <h2>Submit Your Clothes</h2>
             <p class="form-description">Submit clothes data to complete customization analysis</p>
 
-            <form class="customization-form"
-                onsubmit="event.preventDefault(); alert('Check console for window.allFiles array!'); console.log(window.allFiles);">
+            <form class="customization-form" onsubmit="submitCustomization(event)">
                 <div class="form-group">
                     <label for="material" style="font-weight: bold;">Material Information</label>
                     <input type="text" id="material" placeholder="e.g. 100% Cotton, Polyester Blend..."
@@ -274,6 +274,8 @@
         window.allFiles = [];
 
         let videoStream = null;
+        let currentFacingMode = 'environment'; // 'environment' = rear camera, 'user' = front camera
+        let capturedLocation = { lat: null, lon: null }; // will be set when user clicks Get Location
 
         // --- DOM ELEMENTS ---
         const cameraBox = document.getElementById('camera-box');
@@ -299,34 +301,99 @@
         });
 
         // --- 2. TAKE PHOTO LOGIC (Webcam) ---
-        cameraBox.addEventListener('click', async () => {
+        cameraBox.addEventListener('click', () => {
+            startCamera();
+        });
+
+        async function startCamera() {
             try {
-                videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                if (videoStream) {
+                    videoStream.getTracks().forEach(t => t.stop());
+                }
+
+                const constraints = { video: { facingMode: { ideal: currentFacingMode } }, audio: false };
+                videoStream = await navigator.mediaDevices.getUserMedia(constraints);
                 videoElement.srcObject = videoStream;
                 cameraModal.style.display = 'flex';
+                updateCameraIndicator();
             } catch (err) {
-                alert("Camera access denied or not available. Please use 'Upload from Device'.");
+                // Fallback to generic video if facingMode isn't supported
+                try {
+                    videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    videoElement.srcObject = videoStream;
+                    cameraModal.style.display = 'flex';
+                    updateCameraIndicator();
+                } catch (err2) {
+                    alert("Camera access denied or not available. Please use 'Upload from Device'.");
+                }
             }
-        });
+        }
+
+        function switchCamera() {
+            currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+            startCamera();
+        }
+
+        function updateCameraIndicator() {
+            const switchBtn = document.getElementById('switch-camera-btn');
+            if (switchBtn) {
+                switchBtn.textContent = currentFacingMode === 'environment' ? 'Use Front Camera' : 'Use Rear Camera';
+            }
+        }
 
         function closeCamera() {
             cameraModal.style.display = 'none';
             if (videoStream) {
                 videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+                videoElement.srcObject = null;
             }
         }
 
         function takeSnapshot() {
             const context = canvasElement.getContext('2d');
-            canvasElement.width = videoElement.videoWidth;
-            canvasElement.height = videoElement.videoHeight;
+
+            // Resize to a reasonable max dimension to control file size
+            const maxDim = 1600;
+            let width = videoElement.videoWidth || 1280;
+            let height = videoElement.videoHeight || 720;
+            const scale = Math.min(1, maxDim / Math.max(width, height));
+            width = Math.round(width * scale);
+            height = Math.round(height * scale);
+
+            canvasElement.width = width;
+            canvasElement.height = height;
             context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
 
-            canvasElement.toBlob((blob) => {
-                const file = new File([blob], `camera_photo_${Date.now()}.jpg`, { type: "image/jpeg" });
+            const MAX_SIZE = 10 * 1024 * 1024; // 10MB (server limit)
+
+            function finalizeBlob(blob) {
+                if (!blob) return alert('Failed to capture image. Please try again.');
+                const file = new File([blob], `camera_photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
                 addFilesToGallery([file]);
                 closeCamera();
-            }, 'image/jpeg');
+            }
+
+            function tryCompress(quality) {
+                canvasElement.toBlob((b) => {
+                    if (!b) return alert('Failed to capture image.');
+                    if (b.size > MAX_SIZE && quality > 0.4) {
+                        tryCompress(quality - 0.1);
+                    } else {
+                        finalizeBlob(b);
+                    }
+                }, 'image/jpeg', quality);
+            }
+
+            // Start with near-max quality
+            canvasElement.toBlob((blob) => {
+                if (!blob) return alert('Failed to capture image.');
+                if (blob.size > MAX_SIZE) {
+                    tryCompress(0.8);
+                } else {
+                    finalizeBlob(blob);
+                }
+            }, 'image/jpeg', 0.92);
         }
 
         // --- 3. GALLERY MANAGEMENT ---
@@ -384,6 +451,84 @@
 
             console.log("Current Files for Backend:", window.allFiles);
         }
+
+        // --- 4. SUBMIT CUSTOMIZATION REQUEST ---
+        const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://texbridge.onrender.com';
+
+        async function submitCustomization(e) {
+            e.preventDefault();
+
+            if (window.allFiles.length === 0) {
+                alert('Please add at least one photo');
+                return;
+            }
+
+            // Ensure user is signed in (follow same flow as donations)
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                alert('Please sign in to submit a customization request');
+                window.location.href = 'reglogin.html';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            const material = document.getElementById('material').value;
+            const description = document.getElementById('description').value;
+
+            const formData = new FormData();
+            formData.append('userId', user.id);
+            formData.append('material', material);
+            formData.append('description', description);
+
+            // Try to read captured coordinates (if location logic saved them)
+            try {
+                const latInput = document.querySelector('.location-input input');
+                const coordsText = latInput ? latInput.value : '';
+                // If coords are like "Lat: xx, Lon: yy" we skip; backend accepts null if unavailable
+            } catch (err) {
+                // ignore
+            }
+
+            window.allFiles.forEach((file, idx) => {
+                formData.append('photos', file, file.name);
+            });
+
+            // Include coordinates (if available)
+            formData.append('location_lat', capturedLocation.lat);
+            formData.append('location_lon', capturedLocation.lon);
+
+            // Debug: log FormData entries
+            for (let pair of formData.entries()) { console.log('formData:', pair[0], pair[1]); }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const res = await fetch(`${API_URL}/api/customizations`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('Customization request submitted successfully!');
+                    window.allFiles = [];
+                    renderGallery();
+                    // Optionally redirect to dashboard
+                    window.location.href = 'customizations-dashboard.html';
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Information';
+                }
+            } catch (err) {
+                alert('Submission failed: ' + err.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Information';
+            }
+        }
     </script>
     <script>
         // --- LOCATION LOGIC ---
@@ -403,8 +548,9 @@
                         async (position) => {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
-
-                            // Option A: Just show coordinates (Simple)
+                // Save coordinates for the submit step
+                capturedLocation.lat = lat;
+                capturedLocation.lon = lon;
                             // locationInput.value = `Lat: ${lat}, Lon: ${lon}`;
 
                             // Option B: Get real address using free OpenStreetMap API (Better)
