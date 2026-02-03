@@ -5,8 +5,8 @@
 }
 
 :root {
-  --primary-blue: #4a69bd;
-  --light-blue: #e8eef9;
+  --primary-blue: #14b8a6; /* Teal */
+  --light-blue: #ccfbf1; /* Light Teal */
   --dark-text: #333;
   --medium-text: #666;
   --light-text: #888;
@@ -307,11 +307,11 @@ body {
 }
 
 .price-section {
-  background: linear-gradient(135deg, var(--light-blue) 0%, #f0f5ff 100%);
+  background: linear-gradient(135deg, var(--light-blue) 0%, #f0fdfa 100%);
   padding: 24px;
   border-radius: 12px;
   margin-bottom: 32px;
-  border: 1px solid rgba(74, 105, 189, 0.2);
+  border: 1px solid rgba(20, 184, 166, 0.2);
 }
 
 .price-row {
@@ -459,9 +459,9 @@ body {
 }
 
 .btn-primary:hover {
-  background: #3a59ad;
+  background: #0d9488; /* Darker Teal */
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(74, 105, 189, 0.3);
+  box-shadow: 0 6px 20px rgba(20, 184, 166, 0.3);
 }
 
 .btn-secondary {
@@ -734,7 +734,7 @@ body {
 
 .rating-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary-blue), #5a7ad4);
+  background: linear-gradient(90deg, var(--primary-blue), #0d9488);
   border-radius: 10px;
   transition: width 0.5s ease;
 }
@@ -762,9 +762,9 @@ body {
 }
 
 .btn-write-review:hover {
-  background: #3a59ad;
+  background: #0d9488; /* Darker Teal */
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 105, 189, 0.3);
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
 }
 
 .reviews-filter {
@@ -843,7 +843,7 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary-blue), #5a7ad4);
+  background: linear-gradient(135deg, var(--primary-blue), #0d9488);
   color: white;
   display: flex;
   align-items: center;

@@ -5,6 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nylon Zip Jacket - Refashioned Clothes</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+      tailwind.config = {
+          theme: {
+              extend: {
+                  colors: {
+                      brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6', // Base Teal
+                            600: '#0d9488', // Darker Teal
+                            700: '#0f766e',
+                            900: '#134e4a'
+                      }
+                  }
+              }
+          }
+      }
+  </script>
   <link rel="stylesheet" href="prodetail1.css">
 </head>
 <body>
@@ -455,6 +475,24 @@
       <button class="btn-primary" style="width: 100%" onclick="submitReview()">Submit Review</button>
     </div>
   </div>
+
+    <footer class="bg-gray-900 text-gray-300 pt-8 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1">
+                    <a href="#" class="mb-6 inline-flex flex-col items-center gap-2">
+                        <img src="Images/logo.png" alt="RE-TEX Logo" class="h-16 w-auto">
+                        <img src="Images/name.png" alt="RE-TEX Name" class="h-14 w-auto">
+                    </a>
+                    <p class="text-sm text-gray-400">Revolutionizing textile waste management through technology and community empowerment.</p>
+                </div>
+                <div><h4 class="text-white font-bold mb-4">Platform</h4><ul class="space-y-2 text-sm"><li><a href="#" class="hover:text-brand-500">For Collectors</a></li><li><a href="#" class="hover:text-brand-500">For Recyclers</a></li><li><a href="#" class="hover:text-brand-500">Live Pricing</a></li></ul></div>
+                <div><h4 class="text-white font-bold mb-4">Company</h4><ul class="space-y-2 text-sm"><li><a href="#about" class="hover:text-brand-500">Mission</a></li><li><a href="#contact" class="hover:text-brand-500">Contact</a></li></ul></div>
+                <div><h4 class="text-white font-bold mb-4">Stay Updated</h4><div class="flex gap-2"><input type="email" placeholder="Email Address" class="bg-gray-800 border-none rounded-lg px-4 py-2 text-sm w-full focus:ring-2 focus:ring-brand-500"><button class="bg-brand-600 px-4 py-2 rounded-lg text-white text-sm font-bold hover:bg-brand-700">Join</button></div></div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-xs text-gray-500"><p>&copy; 2026 RE-TEX. All rights reserved.</p></div>
+        </div>
+    </footer>
 
   <!-- Cart Manager Script - MUST BE FIRST -->
   <script src="cart-manager.js"></script>

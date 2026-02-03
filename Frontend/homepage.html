@@ -1,194 +1,203 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Homepage</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TexBridge | Dashboard</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-  </head>
-  <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
-    *{
-      scrollbar-width: none;
-    }
-    body {
-  display: flex;             /* 1. Enable flexbox layout */
-  flex-direction: column;    /* 2. Stack children vertically */
-  min-height: 100vh;         /* 3. Ensure the container is at least the full viewport height */
-  margin: 0;
-  background: linear-gradient(90deg, #e2e2e2, rgba(233, 167, 141, 0.779));
-}
-main {
-  margin-bottom: 15vh;
-  /* Alternative: flex-grow: 1; pushes the element to fill the available space */
-}
-    .bg-white{
-      width: fit-content;
-      height: auto;
-    }
-    .bg-white h2{
-      font-size: 98%;
-    }
-    .bg-white p{
-      font-size: 80%;
-    }
-    .bg-white img{
-      /* height: 38.5vh; */
-      width: 20rem;
-      height: 70%;
-    }
-    /* .rec h2{
-      width: max-content;
-    } */
-    footer {
-        margin-top: auto;
-        background-color: #e0e0e0;
-        padding: 24px 0;
-      }
-      .text h1{
-        font-size: clamp(2.2vh, 4vw, 1rem);
-      }
-      .text p{
-        font-size: clamp(1.8vh, 4vw, 1rem);
-      }
-      .row{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .copyright-text p {
-        margin: 0;
-        font-size: 14px;
-        color: #2e2d2d;
-      }      
-      main{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-      .text{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 90vw;
-        height: 15vh;
-        /* padding: 10px 10px 0px 10px; */
-        border-radius: 10px;
-        background-color: #f9f9f9a4;
-      }
-      /* .text h1 {
-        width: 90vw;
-        height: 10vh;
-        padding: 10px 10px 0px 10px;
-        border-radius: 10px 10px 0px 0px;
-        background-color: #f9f9f9a4;
-      }
-      .text p {
-        width: 90vw;
-        height: 7vh;
-        position: relative;
-        bottom: 1.3vh;
-        padding: 0px 10px 0px 10px;
-        border-radius: 0px 0px 10px 10px;
-        background-color: #f9f9f9a4;
-      } */
-  </style>
-  <body>
-    <header>
-      <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="https://tech-arc.github.io/texbridge/" style="font-family: 'Roboto Slab', serif;">
-            <img src="Images/logo.png" alt="Logo" width="30" height="30" style="border-radius: 50%" class="d-inline-block align-text-top">
-            Texbridge
-          </a>
-          <!-- <form action="/alterindex.html"> -->
-          <button onclick="redirectToPrevious()" style="font-weight: bold; padding-right: 2vw; margin-top: 1vh;">-Log out</button>
-          <!-- </form> -->
-        </div>
-      </nav>
-    </header>  
-      <main class="text-center mt-10">
-        <div class="text">
-        <h1 class="text-2xl font-semibold">What would you like to do today?</h1>
-        <p class="text-gray-600 mt-2">Choose from the options below to start your sustainable fashion journey</p>
-        </div>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 px-6">
-            <!-- Donate Clothes -->
-            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-                <h2 class="text-lg font-semibold flex items-center">
-                    <span class="mr-2">🎁</span> Donate Clothes
-                </h2>
-                <p class="text-gray-500 text-sm mt-2 text-center">Give your pre-loved clothes to those in need</p>
-                <img src="Images/Donation.jpg" alt="Donate Clothes" class="my-4 rounded">
-                <a href="donationpage.html">
-                  <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    Continue →
-                  </button>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6', // Base Teal
+                            600: '#0d9488', // Darker Teal for hovers/text
+                            700: '#0f766e',
+                            900: '#134e4a'
+                        }
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        
+        /* Custom scrollbar hide */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+
+    <nav class="fixed w-full z-50 glass border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <a href="https://tech-arc.github.io/texbridge/" class="flex items-center gap-3">
+                    <img src="Images/logo.png" alt="RE-TEX Logo" class="h-12 w-auto">
+                    <img src="Images/name.png" alt="RE-TEX Name" class="h-10 w-auto">
                 </a>
+
+                <div class="flex items-center gap-4">
+                    <button onclick="redirectToPrevious()" class="bg-gray-900 text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-800 transition shadow-lg flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Log out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-100 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-16 animate-fade-up">
+                <div class="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-1.5 mb-6 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                    <span class="text-sm font-medium text-gray-600">Sustainable Fashion Journey</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">What would you like to do today?</h1>
+                <p class="text-lg text-gray-600">Choose an option below to contribute to the circular economy.</p>
             </div>
 
-            <!-- Refashioned Clothes -->
-            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center rec">
-                <h2 class="text-lg font-semibold flex items-center">
-                    <span class="mr-2">🔄</span> Refashioned Clothes
-                </h2>
-                <p class="text-gray-500 text-sm mt-2 text-center">Shop quality refashioned clothes from various website</p>
-                <img src="Images/Refashioned.jpg" alt="Refashioned Clothes" class="my-4 rounded re">
-                <a href="refashioned.html">
-                  <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    Continue →
-                  </button>
-                </a>
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-6 flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300 animate-fade-up" style="animation-delay: 0.1s;">
+                    <div class="w-full h-48 rounded-xl overflow-hidden mb-6 relative group">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition"></div>
+                        <img src="Images/Donation.jpg" alt="Donate" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center mb-4 text-2xl">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-2">Donate Clothes</h2>
+                    <p class="text-gray-500 text-sm mb-6 flex-grow">Give your pre-loved clothes a second life by donating to those in need.</p>
+                    <a href="donationpage.html" class="w-full">
+                        <button class="w-full bg-brand-500 text-white font-bold py-3 rounded-xl hover:bg-brand-600 transition shadow-lg shadow-brand-500/20">
+                            Donate Now
+                        </button>
+                    </a>
+                </div>
 
-            <!-- Customize -->
-            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-                <h2 class="text-lg font-semibold flex items-center">
-                    <span class="mr-2">🎨</span> Customize
-                </h2>
-                <p class="text-gray-500 text-sm mt-2 text-center">Get creative with upcycling and alterations</p>
-                <img src="Images/coustomised.png" alt="Customize Clothes" class="my-4 rounded">
-                <a href="recoustamize.html">
-                  <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    Continue →
-                  </button>
-                </a>
+                <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-6 flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300 animate-fade-up" style="animation-delay: 0.2s;">
+                    <div class="w-full h-48 rounded-xl overflow-hidden mb-6 relative group">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition"></div>
+                        <img src="Images/Refashioned.jpg" alt="Refashioned" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4 text-2xl">
+                        <i class="fa-solid fa-shirt"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-2">Buy Refashioned</h2>
+                    <p class="text-gray-500 text-sm mb-6 flex-grow">Shop premium quality upcycled clothing from verified creators.</p>
+                    <a href="refashioned.html" class="w-full">
+                        <button class="w-full bg-brand-500 text-white font-bold py-3 rounded-xl hover:bg-brand-600 transition shadow-lg shadow-brand-500/20">
+                            Shop Collection
+                        </button>
+                    </a>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-6 flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300 animate-fade-up" style="animation-delay: 0.3s;">
+                    <div class="w-full h-48 rounded-xl overflow-hidden mb-6 relative group">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition"></div>
+                        <img src="Images/coustomised.png" alt="Customize" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4 text-2xl">
+                        <i class="fa-solid fa-palette"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-2">Customize & Repair</h2>
+                    <p class="text-gray-500 text-sm mb-6 flex-grow">Get creative with alterations or repair your favorite garments.</p>
+                    <a href="recoustamize.html" class="w-full">
+                        <button class="w-full bg-brand-500 text-white font-bold py-3 rounded-xl hover:bg-brand-600 transition shadow-lg shadow-brand-500/20">
+                            Start Creating
+                        </button>
+                    </a>
+                </div>
+
             </div>
         </div>
     </main>
-    <div class="spacer"></div>
-<footer class="copyright-area">
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 text-center text-lg-left">
-        <div class="copyright-text">
-          <p id="copyright-footer">Copyright &copy; 2018, All Right Reserved</p>
+
+    <section id="contact" class="py-24 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Get in Touch</h2>
+                <p class="text-gray-500 text-lg">Have questions about bulk listing or partnership opportunities? <br> Our team is here to help.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="md:col-span-1 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <div class="w-10 h-10 bg-brand-100 text-brand-600 rounded-lg flex items-center justify-center mb-4"><i class="fa-solid fa-envelope"></i></div>
+                        <h4 class="font-bold text-gray-900">Email Us</h4>
+                        <p class="text-gray-500 text-sm mt-1">support@texbridge.com</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <div class="w-10 h-10 bg-brand-100 text-brand-600 rounded-lg flex items-center justify-center mb-4"><i class="fa-solid fa-location-dot"></i></div>
+                        <h4 class="font-bold text-gray-900">Address</h4>
+                        <p class="text-gray-500 text-sm mt-1">Bengalore, Karnataka, India</p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8">
+                    <form onsubmit="event.preventDefault(); alert('Message sent successfully!');">
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div><label class="block text-sm font-semibold text-gray-700 mb-2">First Name</label><input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 transition"></div>
+                            <div><label class="block text-sm font-semibold text-gray-700 mb-2">Last Name</label><input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 transition"></div>
+                        </div>
+                        <div class="mb-6"><label class="block text-sm font-semibold text-gray-700 mb-2">Email</label><input type="email" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 transition"></div>
+                        <div class="mb-6"><label class="block text-sm font-semibold text-gray-700 mb-2">Message</label><textarea rows="4" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 transition"></textarea></div>
+                        <button type="submit" class="w-full bg-gray-900 text-white font-bold py-4 rounded-lg hover:bg-gray-800 transition transform active:scale-95">Send Message</button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</footer>
-  </body>
-  <script>
-    function redirectToPrevious() {
-        // 1. Clear the custom saved URL so your "Go Back" button won't work anymore
-      localStorage.removeItem('homepage.html');
+    </section>
 
-      // 2. Clear any other session data (optional but recommended)
-      // localStorage.removeItem(''); 
-      // sessionStorage.clear();
+    <footer class="bg-gray-900 text-gray-300 pt-8 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1">
+                    <a href="#" class="mb-6 inline-flex flex-col items-center gap-2">
+                        <img src="Images/logo.png" alt="RE-TEX Logo" class="h-16 w-auto">
+                        <img src="Images/name.png" alt="RE-TEX Name" class="h-14 w-auto">
+                    </a>
+                    <p class="text-sm text-gray-400">Revolutionizing textile waste management through technology and community empowerment.</p>
+                </div>
+                <div><h4 class="text-white font-bold mb-4">Platform</h4><ul class="space-y-2 text-sm"><li><a href="#" class="hover:text-brand-500">For Collectors</a></li><li><a href="#" class="hover:text-brand-500">For Recyclers</a></li><li><a href="#" class="hover:text-brand-500">Live Pricing</a></li></ul></div>
+                <div><h4 class="text-white font-bold mb-4">Company</h4><ul class="space-y-2 text-sm"><li><a href="#about" class="hover:text-brand-500">Mission</a></li><li><a href="#contact" class="hover:text-brand-500">Contact</a></li></ul></div>
+                <div><h4 class="text-white font-bold mb-4">Stay Updated</h4><div class="flex gap-2"><input type="email" placeholder="Email Address" class="bg-gray-800 border-none rounded-lg px-4 py-2 text-sm w-full focus:ring-2 focus:ring-brand-500"><button class="bg-brand-600 px-4 py-2 rounded-lg text-white text-sm font-bold hover:bg-brand-700">Join</button></div></div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-xs text-gray-500"><p>&copy; 2026 TexBridge. All rights reserved.</p></div>
+        </div>
+    </footer>
 
-      // 3. Redirect to the Login/Home page using REPLACE
-      // 'replace' swaps the current history entry with the new one.
-      // This means the user CANNOT click the browser "Back" button to return here.
-      window.location.replace("https://tech-arc.github.io/texbridge/");
-      }
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>
+    <script>
+        function redirectToPrevious() {
+            // Logic to clear session/local storage
+            localStorage.removeItem('homepage.html');
+            // Redirect to Landing Page
+            window.location.replace("https://tech-arc.github.io/texbridge/");
+        }
+    </script>
+</body>
 </html>
