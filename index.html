@@ -287,21 +287,37 @@
                             email: form.querySelector('[name=email]').value.trim(),
                             message: form.querySelector('[name=message]').value.trim(),
                         };
+
+                        // Choose API base depending on where the site is running
+                        const hostname = window.location.hostname;
+                        let apiBase = '';
+                        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                            apiBase = 'http://localhost:3000';
+                        } else if (hostname === 'tech-arc.github.io') {
+                            // when running on GitHub Pages, call the deployed backend
+                            apiBase = 'https://texbridge.onrender.com';
+                        } // otherwise leave empty to use same origin
+
                         try {
-                            const res = await fetch('/api/contact', {
+                            const res = await fetch(apiBase + '/api/contact', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify(data)
                             });
-                            const json = await res.json();
+
+                            // try to parse JSON response safely
+                            const json = await res.json().catch(() => ({}));
+
                             if (res.ok) {
                                 alert('Message sent successfully!');
                                 form.reset();
                             } else {
-                                alert(json.error || 'Failed to send message');
+                                alert(json.error || `Failed to send message (status ${res.status})`);
                             }
                         } catch (err) {
-                            alert('Error sending message');
+                            // show a more helpful error for network/CORS issues
+                            alert('Error sending message: ' + (err.message || err));
+                            console.error('Contact form error:', err);
                         }
                     });
                     </script>
