@@ -55,7 +55,9 @@
             transform: translateY(0);
         }
 
+        /* Hide scrollbar for Chrome, Safari and Opera */
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        /* Hide scrollbar for IE, Edge and Firefox */
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         /* Cursor styles for dragging */
@@ -74,7 +76,7 @@
         }
     </style>
 </head>
-<body class="bg-white text-gray-900 font-sans antialiased">
+<body class="bg-white text-gray-900 font-sans antialiased overflow-x-hidden">
 
     <nav class="fixed w-full z-50 glass border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,7 +88,7 @@
 
                 <div class="hidden md:flex items-center gap-8">
                     <a href="#home" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Home</a>
-                    <a href="#impact" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Impact</a>
+                    <a href="#our-mission" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Our Mission</a>
                     <a href="#about" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Our Process</a>
                     <a href="#contact" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Contact</a>
                 </div>
@@ -104,7 +106,7 @@
         <div id="mobile-menu" class="md:hidden bg-white border-t border-gray-100 shadow-xl">
             <div class="flex flex-col px-4 pt-4 pb-6 space-y-2">
                 <a href="#home" class="mobile-link text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 px-3 py-2 rounded-lg">Home</a>
-                <a href="#impact" class="mobile-link text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 px-3 py-2 rounded-lg">Impact</a>
+                <a href="#our-mission" class="mobile-link text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 px-3 py-2 rounded-lg">Our Mission</a>
                 <a href="#about" class="mobile-link text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 px-3 py-2 rounded-lg">Our Process</a>
                 <a href="#contact" class="mobile-link text-base font-medium text-gray-700 hover:text-brand-600 hover:bg-gray-50 px-3 py-2 rounded-lg">Contact</a>
                 
@@ -167,9 +169,10 @@
         </div>
     </section>
 
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 bg-gray-50" id="our-mission">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+                
                 <div class="reveal">
                     <h2 class="text-brand-600 font-bold tracking-wide uppercase text-sm mb-3">Our Mission</h2>
                     <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Bridging the Supply Gap</h3>
@@ -187,14 +190,17 @@
                     </ul>
                 </div>
                 
-                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-xl reveal delay-200">
-                    <div id="graphScrollContainer" class="w-full overflow-x-auto no-scrollbar pb-2 cursor-grab active:cursor-grabbing select-none">
+                <div class="bg-white p-2 md:p-6 rounded-2xl shadow-xl reveal delay-200 w-full overflow-hidden">
+                    <!-- Custom HTML Legend -->
+                    <div id="htmlLegend" class="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 px-4 pt-2 pb-4 text-xs"></div>
+
+                    <div id="graphScrollContainer" class="w-full max-w-full overflow-x-auto no-scrollbar pb-2 cursor-grab active:cursor-grabbing select-none" style="touch-action: pan-x;">
                         <div class="relative h-[300px] min-w-[900px]">
                             <canvas id="impactChart"></canvas>
                         </div>
                     </div>
-                    <p class="text-center text-xs text-gray-400 mt-4">
-                        <i class="fa-solid fa-arrows-left-right mr-1"></i> Drag or Swipe to see projections (2023-2040)
+                    <p class="text-center text-xs text-gray-400 mt-4 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrows-left-right opacity-50"></i> Drag or Swipe to see 2040 projections
                     </p>
                 </div>
             </div>
@@ -211,68 +217,31 @@
                 </p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition reveal delay-100">
-                    <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center mb-6 text-2xl">
-                        <i class="fa-solid fa-truck-fast"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">Efficient Collection</h4>
-                    <p class="text-gray-600">
-                        Verified collectors pick up waste from homes & send it to local hubs.
-                    </p>
+                    <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-xl flex items-center justify-center mb-6 text-2xl"><i class="fa-solid fa-truck-fast"></i></div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Efficient Collection</h4><p class="text-gray-600">Verified collectors pick up waste from homes & send it to local hubs.</p>
                 </div>
-
                 <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition reveal delay-200">
-                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 text-2xl">
-                        <i class="fa-solid fa-boxes-stacked"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">Smart Segregation</h4>
-                    <p class="text-gray-600">
-                        Waste sorted: Downcycling 30%, Recycling 20%, Upcycling 30%, Rewearable 15%, Residual 5%. Zero landfill.
-                    </p>
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6 text-2xl"><i class="fa-solid fa-boxes-stacked"></i></div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Smart Segregation</h4><p class="text-gray-600">Waste sorted: Downcycling 30%, Recycling 20%, Upcycling 30%, Rewearable 15%, Residual 5%. Zero landfill.</p>
                 </div>
-
                 <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition reveal delay-300">
-                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6 text-2xl">
-                        <i class="fa-solid fa-industry"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">Industry Connection</h4>
-                    <p class="text-gray-600">
-                        Sorted materials reach manufacturers who bid for new production cycles.
-                    </p>
+                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6 text-2xl"><i class="fa-solid fa-industry"></i></div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Industry Connection</h4><p class="text-gray-600">Sorted materials reach manufacturers who bid for new production cycles.</p>
                 </div>
-
                 <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition reveal delay-100">
-                    <div class="w-14 h-14 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center mb-6 text-2xl">
-                        <i class="fa-solid fa-shirt"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">Custom Upcycling</h4>
-                    <p class="text-gray-600">
-                        Recycled fibers transformed into trendy, ready-to-wear apparel.
-                    </p>
+                    <div class="w-14 h-14 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center mb-6 text-2xl"><i class="fa-solid fa-shirt"></i></div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Custom Upcycling</h4><p class="text-gray-600">Recycled fibers transformed into trendy, ready-to-wear apparel.</p>
                 </div>
-
                 <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition reveal delay-200">
-                    <div class="w-14 h-14 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6 text-2xl">
-                        <i class="fa-solid fa-mobile-screen"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">Transparent Tracking</h4>
-                    <p class="text-gray-600">
-                        Users track donations & recycling through the Retex app.
-                    </p>
+                    <div class="w-14 h-14 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6 text-2xl"><i class="fa-solid fa-mobile-screen"></i></div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Transparent Tracking</h4><p class="text-gray-600">Users track donations & recycling through the Retex app.</p>
                 </div>
-
                 <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 hover:shadow-lg transition reveal delay-300">
-                    <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-6 text-2xl">
-                        <i class="fa-solid fa-users-rays"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">Community Impact</h4>
-                    <p class="text-gray-600">
-                        Supports artisans, NGOs, and local jobs while promoting sustainable fashion.
-                    </p>
+                    <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-6 text-2xl"><i class="fa-solid fa-users-rays"></i></div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3">Community Impact</h4><p class="text-gray-600">Supports artisans, NGOs, and local jobs while promoting sustainable fashion.</p>
                 </div>
-
             </div>
         </div>
     </section>
@@ -284,7 +253,7 @@
                 <p class="text-gray-500 text-lg">Have questions about bulk listing or partnership opportunities? <br> Our team is here to help.</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="md:col-span-1 space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                         <div class="w-10 h-10 bg-brand-100 text-brand-600 rounded-lg flex items-center justify-center mb-4"><i class="fa-solid fa-envelope"></i></div>
@@ -300,7 +269,7 @@
 
                 <div class="md:col-span-2 bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8">
                     <form onsubmit="event.preventDefault(); alert('Message sent successfully!');">
-                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div><label class="block text-sm font-semibold text-gray-700 mb-2">First Name</label><input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 transition"></div>
                             <div><label class="block text-sm font-semibold text-gray-700 mb-2">Last Name</label><input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 transition"></div>
                         </div>
@@ -447,15 +416,9 @@
                 responsive: true,
                 maintainAspectRatio: false, 
                 plugins: {
-                    legend: { 
-                        position: 'top',
-                        align: 'start',
-                        labels: {
-                            usePointStyle: true,
-                            boxWidth: 8,
-                            padding: 15,
-                            font: { size: 11 } 
-                        }
+                    legend: {
+                        // We disable the default canvas legend to use our own HTML version
+                        display: false
                     },
                     tooltip: {
                         mode: 'index',
@@ -482,6 +445,41 @@
                 }
             }
         });
+
+        // --- 3. CUSTOM HTML LEGEND GENERATION ---
+        // This replaces the default canvas-based legend to allow for better responsive control (like wrapping on mobile).
+        const legendContainer = document.getElementById('htmlLegend');
+        if (legendContainer) {
+            // Get the items from the default legend generator to get all styles and text
+            const legendItems = impactChart.options.plugins.legend.labels.generateLabels(impactChart);
+
+            legendItems.forEach(item => {
+                const li = document.createElement('div');
+                li.className = 'flex items-center gap-2 cursor-pointer';
+                
+                // Set initial visual state based on if the dataset is hidden
+                li.style.opacity = item.hidden ? 0.5 : 1;
+                li.style.textDecoration = item.hidden ? 'line-through' : 'none';
+
+                // Click handler to toggle dataset visibility
+                li.onclick = () => {
+                    const isVisible = impactChart.isDatasetVisible(item.datasetIndex);
+                    impactChart.setDatasetVisibility(item.datasetIndex, !isVisible);
+                    impactChart.update();
+                    
+                    // Update style immediately for instant feedback
+                    li.style.opacity = isVisible ? 0.5 : 1;
+                    li.style.textDecoration = isVisible ? 'line-through' : 'none';
+                };
+
+                // Use innerHTML to easily create the dot and text
+                li.innerHTML = `
+                    <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${item.fillStyle}; border: 1px solid ${item.strokeStyle};"></span>
+                    <span class="text-gray-700">${item.text}</span>
+                `;
+                legendContainer.appendChild(li);
+            });
+        }
 
         // --- 3. DRAG TO SCROLL LOGIC ---
         const slider = document.getElementById('graphScrollContainer');
