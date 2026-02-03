@@ -9,6 +9,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -144,6 +145,26 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Configure email transporter (set SMTP_* in .env). Example for Gmail: SMTP_HOST=smtp.gmail.com, SMTP_PORT=465, SMTP_SECURE=true, SMTP_USER=you@gmail.com, SMTP_PASS=app-password
+let transporter = null;
+if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+    transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT) || 587,
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS
+        }
+    });
+
+    transporter.verify()
+        .then(() => console.log('Mail transporter ready'))
+        .catch(err => console.log('Mail transporter error', err));
+} else {
+    console.log('SMTP not configured. Contact form will not send emails until SMTP_* env vars are set.');
+}
+
 // Google OAuth Strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -191,6 +212,35 @@ passport.deserializeUser((id, done) => {
 // Root endpoint
 app.get('/', (req, res) => {
     res.json({ message: 'TexBridge Auth API is running' });
+});
+
+// Contact form endpoint - sends email to recipient defined by CONTACT_RECIPIENT env var (defaults to text.tile.4u@gmail.com)
+app.post('/api/contact', async (req, res) => {
+    const { firstName, lastName, email, message } = req.body;
+
+    if (!email || !message) {
+        return res.status(400).json({ error: 'Email and message are required' });
+    }
+
+    if (!transporter) {
+        return res.status(500).json({ error: 'Mail server not configured' });
+    }
+
+    const recipient = process.env.CONTACT_RECIPIENT || 'text.tile.4u@gmail.com';
+    const mailOptions = {
+        from: process.env.SMTP_FROM || `${firstName || ''} ${lastName || ''} <${process.env.SMTP_USER}>`,
+        to: recipient,
+        subject: `Contact form message from ${firstName || ''} ${lastName || ''}`.trim(),
+        text: `From: ${firstName || ''} ${lastName || ''} <${email}>\n\n${message}`
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.json({ success: true, message: 'Message sent' });
+    } catch (err) {
+        console.log('Mail error', err);
+        res.status(500).json({ error: 'Failed to send message' });
+    }
 });
 
 // Register endpoint
