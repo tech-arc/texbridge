@@ -16,16 +16,16 @@
         .stats { display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-bottom:20px }
         .stat-card { background:white; padding:16px; border-radius:8px; box-shadow: 0 2px 4px rgba(0,0,0,0.06); text-align:center }
         .stat-number { font-size: 26px; color:#5470b7; font-weight:700 }
-        .customizations-grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap:20px }
-        .card { background:white; padding:16px; border-radius:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08) }
+        .customizations-grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap:20px }
+        .card { background:white; padding:16px; border-radius:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow:hidden; word-wrap:break-word; }
         .card h3 { color:#5470b7; margin-bottom:8px }
         .field-label { font-weight:700; font-size:12px; color:#555; text-transform:uppercase }
-        .field-value { margin-top:6px; color:#333 }
+        .field-value { margin-top:6px; color:#333; overflow-wrap:break-word; word-break:break-word; }
         .photos { display:grid; grid-template-columns: repeat(2,1fr); gap:8px; margin-top:10px }
-        .photo-thumbnail { width:100%; height:90px; object-fit:cover; border-radius:4px; cursor:pointer }
-        .controls { display:flex; gap:8px; align-items:center; margin-top:12px }
-        .select { padding:6px; border-radius:6px; border:1px solid #ddd }
-        .update-btn { padding:6px 10px; background:#5470b7; color:white; border:none; border-radius:6px; cursor:pointer }
+        .photo-thumbnail { width:100%; height:90px; object-fit:cover; border-radius:4px; cursor:pointer; display:block; }
+        .controls { display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap; }
+        .select { padding:6px; border-radius:6px; border:1px solid #ddd; min-width:0; flex:1 1 150px; max-width:220px; box-sizing:border-box; }
+        .update-btn { padding:6px 10px; background:#5470b7; color:white; border:none; border-radius:6px; cursor:pointer; flex:0 0 auto; white-space:nowrap; }
         .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center }
         .modal.active { display:flex }
         .modal-content { background:white; padding:20px; border-radius:8px; max-width:90%; max-height:90%; overflow:auto }
