@@ -222,8 +222,15 @@ app.post('/api/contact', async (req, res) => {
         return res.status(400).json({ error: 'Email and message are required' });
     }
 
+    console.log('[Contact] Request received:', { from: email, name: `${firstName || ''} ${lastName || ''}` });
+
     if (!transporter) {
-        return res.status(500).json({ error: 'Mail server not configured' });
+        console.log('[Contact] Mail server not configured. SMTP env present?', {
+            SMTP_HOST: !!process.env.SMTP_HOST,
+            SMTP_USER: !!process.env.SMTP_USER,
+            SMTP_PASS: !!process.env.SMTP_PASS
+        });
+        return res.status(500).json({ error: 'Mail server not configured on backend. Please set SMTP_HOST, SMTP_USER and SMTP_PASS environment variables on your hosting provider (Render) and restart the service.' });
     }
 
     const recipient = process.env.CONTACT_RECIPIENT || 'text.tile.4u@gmail.com';
@@ -235,12 +242,23 @@ app.post('/api/contact', async (req, res) => {
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        const info = await transporter.sendMail(mailOptions);
+        console.log('[Contact] Email sent, messageId:', info && info.messageId);
         res.json({ success: true, message: 'Message sent' });
     } catch (err) {
-        console.log('Mail error', err);
-        res.status(500).json({ error: 'Failed to send message' });
+        console.log('[Contact] Mail error', err);
+        res.status(500).json({ error: 'Failed to send message: ' + (err.message || 'unknown error') });
     }
+});
+
+// Mail status endpoint (useful to check on Render whether SMTP vars are configured)
+app.get('/api/mail-status', (req, res) => {
+    res.json({
+        configured: !!transporter,
+        smtp_host_present: !!process.env.SMTP_HOST,
+        smtp_user_present: !!process.env.SMTP_USER,
+        contact_recipient: process.env.CONTACT_RECIPIENT || 'text.tile.4u@gmail.com'
+    });
 });
 
 // Register endpoint
