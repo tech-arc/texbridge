@@ -514,10 +514,26 @@
 
                 if (data.success) {
                     alert('Customization request submitted successfully!');
+                    // Clear uploaded files and gallery preview but stay on the same page (no redirect)
                     window.allFiles = [];
                     renderGallery();
-                    // Optionally redirect to dashboard
-                    window.location.href = 'customizations-dashboard.html';
+                    // Re-enable submit button and reset text
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Information';
+                    // Clear form inputs
+                    const materialInput = document.getElementById('material');
+                    const descriptionInput = document.getElementById('description');
+                    if (materialInput) materialInput.value = '';
+                    if (descriptionInput) descriptionInput.value = '';
+                    // Show a small inline confirmation message near the form
+                    const formEl = document.querySelector('.customization-form');
+                    if (formEl) {
+                        const confirmEl = document.createElement('div');
+                        confirmEl.style.cssText = 'margin-top:12px;padding:10px;background:#e6f4ea;border-radius:6px;color:#2e7d32';
+                        confirmEl.textContent = 'Request submitted successfully. We will notify you when it is processed.';
+                        formEl.prepend(confirmEl);
+                        setTimeout(() => confirmEl.remove(), 6000);
+                    }
                 } else {
                     alert('Error: ' + (data.error || 'Unknown'));
                     submitBtn.disabled = false;
