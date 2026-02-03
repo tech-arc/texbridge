@@ -126,6 +126,17 @@ db.run(`CREATE TABLE IF NOT EXISTS customizations (
     FOREIGN KEY (userId) REFERENCES users(id)
 )`);
 
+// Create contacts table as a fallback when SMTP is not configured
+// Stores contact form submissions so admins can review them
+db.run(`CREATE TABLE IF NOT EXISTS contacts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    firstName TEXT,
+    lastName TEXT,
+    email TEXT NOT NULL,
+    message TEXT NOT NULL,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+)`);
+
 // Middleware
 app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:5500', 'http://127.0.0.1:5500', 'https://tech-arc.github.io', 'https://texbridge.onrender.com'],
@@ -230,7 +241,20 @@ app.post('/api/contact', async (req, res) => {
             SMTP_USER: !!process.env.SMTP_USER,
             SMTP_PASS: !!process.env.SMTP_PASS
         });
-        return res.status(500).json({ error: 'Mail server not configured on backend. Please set SMTP_HOST, SMTP_USER and SMTP_PASS environment variables on your hosting provider (Render) and restart the service.' });
+
+        // Save submission to contacts table as a safe fallback
+        db.run(`INSERT INTO contacts (firstName, lastName, email, message) VALUES (?, ?, ?, ?)`,
+            [firstName || null, lastName || null, email, message], function(err) {
+                if (err) {
+                    console.log('[Contact] Failed to save to DB fallback', err);
+                    return res.status(500).json({ error: 'Mail server not configured and failed to save message' });
+                }
+
+                console.log('[Contact] Saved message to DB (fallback), id:', this.lastID);
+                return res.json({ success: true, message: 'Mail server not configured; message saved to backend database.' });
+            }
+        );
+        return;
     }
 
     const recipient = process.env.CONTACT_RECIPIENT || 'text.tile.4u@gmail.com';
@@ -253,11 +277,31 @@ app.post('/api/contact', async (req, res) => {
 
 // Mail status endpoint (useful to check on Render whether SMTP vars are configured)
 app.get('/api/mail-status', (req, res) => {
-    res.json({
-        configured: !!transporter,
-        smtp_host_present: !!process.env.SMTP_HOST,
-        smtp_user_present: !!process.env.SMTP_USER,
-        contact_recipient: process.env.CONTACT_RECIPIENT || 'text.tile.4u@gmail.com'
+    db.get('SELECT COUNT(*) as cnt FROM contacts', [], (err, row) => {
+        const contactsCount = (row && row.cnt) || 0;
+        res.json({
+            configured: !!transporter,
+            smtp_host_present: !!process.env.SMTP_HOST,
+            smtp_user_present: !!process.env.SMTP_USER,
+            contact_recipient: process.env.CONTACT_RECIPIENT || 'text.tile.4u@gmail.com',
+            saved_contacts: contactsCount
+        });
+    });
+});
+
+// Admin endpoint to read saved contact messages (protected by CONTACT_ADMIN_KEY header)
+app.get('/api/contacts', (req, res) => {
+    const key = req.headers['x-admin-key'];
+    if (!process.env.CONTACT_ADMIN_KEY || key !== process.env.CONTACT_ADMIN_KEY) {
+        return res.status(401).json({ error: 'Unauthorized. Set CONTACT_ADMIN_KEY env var and provide it via x-admin-key header.' });
+    }
+
+    db.all('SELECT id, firstName, lastName, email, message, createdAt FROM contacts ORDER BY createdAt DESC LIMIT 200', [], (err, rows) => {
+        if (err) {
+            console.log('[Contacts] DB read error', err);
+            return res.status(500).json({ error: 'Failed to read contacts' });
+        }
+        res.json({ success: true, contacts: rows });
     });
 });
 
