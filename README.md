@@ -1,8 +1,11 @@
-# TexBridge - Textile Management & Waste Recovery Platform
+# TexBridge — Textile Management & Waste Recovery Platform
 
-![TexBridge Logo](Frontend/Images/logo.png)
+<p align="center">
+    <img src="Frontend/Images/logo.png" alt="TexBridge logo" width="120" style="margin-right:18px;" />
+    <img src="Frontend/Images/name.png" alt="TexBridge wordmark" width="260" />
+</p>
 
-Welcome to **TexBridge**! A comprehensive textile waste management platform that connects waste scrappers, industries, TRFs (Textile Recovery Facilities), NGOs, and sustainable fashion enthusiasts. We're revolutionizing textile waste management through technology and community empowerment.
+TexBridge is a digital platform that organizes and formalizes textile collection, recycling, upcycling, and customization across the supply chain. It connects collectors, Textile Recovery Facilities (TRFs), tailors, manufacturers, NGOs, and consumers to improve traceability, create market access for informal-sector workers, and reduce environmental impact.
 
 ---
 
